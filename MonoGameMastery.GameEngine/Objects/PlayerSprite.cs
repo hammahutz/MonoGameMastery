@@ -6,9 +6,6 @@ namespace MonoGameMastery.GameEngine.Objects
 {
     public class PlayerSprite : BaseGameObject
     {
-        public PlayerSprite(Texture2D texture2D)
-        {
-            _texture2D = texture2D;
-        }
+        public PlayerSprite(Texture2D texture2D) => _texture2D = texture2D;
     }
 }
