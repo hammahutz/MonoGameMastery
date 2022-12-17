@@ -22,8 +22,8 @@ public class MainGame : Game
     private RenderTarget2D _renderTarget;
     private Rectangle _renderScaleRectangle;
 
-    private const int DESIGNED_RESOLUTION_WIDTH = 640;
-    private const int DESIGNED_RESOLUTION_HEIGHT = 480;
+    private const int DESIGNED_RESOLUTION_WIDTH = 1280;
+    private const int DESIGNED_RESOLUTION_HEIGHT = 720;
     private const float DESIGNED_RESOLUTION_ASPECT_RATION = DESIGNED_RESOLUTION_WIDTH / (float)DESIGNED_RESOLUTION_HEIGHT;
 
     public MainGame()
@@ -41,7 +41,6 @@ public class MainGame : Game
         _renderTarget = new RenderTarget2D(_graphics.GraphicsDevice, DESIGNED_RESOLUTION_WIDTH, DESIGNED_RESOLUTION_HEIGHT, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
         _renderScaleRectangle = GetScaleRectangle();
         base.Initialize();
-
     }
 
     private Rectangle GetScaleRectangle()
@@ -92,7 +91,7 @@ public class MainGame : Game
 
     protected override void UnloadContent()
     {
-        _currentGameState?.UnloadContent(Content);
+        _currentGameState?.UnloadContent();
         base.UnloadContent();
     }
 
@@ -104,7 +103,7 @@ public class MainGame : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin();
-        _currentGameState.Render(_spriteBatch);
+        _currentGameState.Draw(_spriteBatch);
         _spriteBatch.End();
     }
     private void DrawToScreen()
@@ -122,11 +121,12 @@ public class MainGame : Game
         {
             _currentGameState.OnStateSwitched -= CurrentGameState_OnStateSwitched;
             _currentGameState.OnEventNotification -= _currentGameState_OnEventNotification;
-            _currentGameState?.UnloadContent(Content);
+            _currentGameState?.UnloadContent();
         }
 
         _currentGameState = gameState;
-        _currentGameState.LoadContent(Content);
+        _currentGameState.Initialize(Content);
+        _currentGameState.LoadContent();
 
         _currentGameState.OnStateSwitched += CurrentGameState_OnStateSwitched;
         _currentGameState.OnEventNotification  += _currentGameState_OnEventNotification;
