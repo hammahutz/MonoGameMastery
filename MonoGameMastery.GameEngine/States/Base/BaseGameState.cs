@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+using MonoGameMastery.GameEngine.Input.Base;
 using MonoGameMastery.GameEngine.Objects.Base;
 
 
@@ -13,15 +14,22 @@ public abstract class BaseGameState
 {
     private List<string> _assets = new List<string>();
     private ContentManager _contentManager;
-
+    private int _viewportWidth;
+    private int _viewportHeight;
     public const string FallbackTexture = "Empty";
+
+    protected InputManager InputManager { get; set; }
 
 
     private readonly List<BaseGameObject> _gameObjects = new List<BaseGameObject>();
 
-    public void Initialize(ContentManager contentManager)
+    public void Initialize(ContentManager contentManager, int viewportWidth, int viewportHeight)
     {
         _contentManager = contentManager;
+        _viewportWidth = viewportWidth;
+        _viewportHeight = viewportHeight;
+
+        SetInputManager();
     }
     public abstract void LoadContent();
     public void UnloadContent()
@@ -32,6 +40,8 @@ public abstract class BaseGameState
         _assets = new List<string>();
     }
 
+    public abstract void HandleInput();
+    public virtual void Draw(SpriteBatch spriteBatch) => _gameObjects.OrderBy(a => a.ZIndex).ToList().ForEach(x => x.Draw(spriteBatch));
     protected Texture2D LoadTexture(string textureName)
     {
         Texture2D texture = _contentManager.Load<Texture2D>(textureName);
@@ -41,11 +51,6 @@ public abstract class BaseGameState
         }
         return texture ?? _contentManager.Load<Texture2D>(FallbackTexture);
     }
-    public abstract void HandleInput();
-    public virtual void Draw(SpriteBatch spriteBatch) => _gameObjects.OrderBy(a => a.ZIndex).ToList().ForEach(x => x.Draw(spriteBatch));
-
-    public event EventHandler<BaseGameState> OnStateSwitched;
-    public event EventHandler<Events> OnEventNotification;
 
     protected void SwitchState(BaseGameState gameState) => OnStateSwitched?.Invoke(this, gameState);
     protected void NotifyEvent(Events eventType, object argument = null)
@@ -54,4 +59,9 @@ public abstract class BaseGameState
         _gameObjects.ForEach(x => x.OnNotify(eventType));
     }
     protected void AddGameObject(BaseGameObject gameObject) => _gameObjects.Add(gameObject);
+    protected abstract void SetInputManager();
+    public event EventHandler<BaseGameState> OnStateSwitched;
+    public event EventHandler<Events> OnEventNotification;
+
+
 }

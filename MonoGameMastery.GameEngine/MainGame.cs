@@ -125,7 +125,7 @@ public class MainGame : Game
         }
 
         _currentGameState = gameState;
-        _currentGameState.Initialize(Content);
+        _currentGameState.Initialize(Content, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         _currentGameState.LoadContent();
 
         _currentGameState.OnStateSwitched += CurrentGameState_OnStateSwitched;

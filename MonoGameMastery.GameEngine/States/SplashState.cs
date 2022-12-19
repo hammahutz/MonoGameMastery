@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using MonoGameMastery.GameEngine.Input;
+using MonoGameMastery.GameEngine.Input.Base;
 using MonoGameMastery.GameEngine.Objects;
 using MonoGameMastery.GameEngine.States.Base;
 
@@ -30,6 +32,7 @@ public class SplashState : BaseGameState
         spriteBatch.DrawString(MainGame.Font, "Splash State", new Vector2(10, 20), Color.AliceBlue);
     }
 
+    protected override void SetInputManager() => InputManager = new InputManager(new GameplayInputMapper());
 
 
 }
