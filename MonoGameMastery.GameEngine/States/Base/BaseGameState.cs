@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -40,7 +41,8 @@ public abstract class BaseGameState
         _assets = new List<string>();
     }
 
-    public abstract void HandleInput();
+    public abstract void HandleInput(GameTime gameTime);
+    public virtual void Update(GameTime gameTime) { }
     public virtual void Draw(SpriteBatch spriteBatch) => _gameObjects.OrderBy(a => a.ZIndex).ToList().ForEach(x => x.Draw(spriteBatch));
     protected Texture2D LoadTexture(string textureName)
     {
@@ -59,6 +61,7 @@ public abstract class BaseGameState
         _gameObjects.ForEach(x => x.OnNotify(eventType));
     }
     protected void AddGameObject(BaseGameObject gameObject) => _gameObjects.Add(gameObject);
+    protected void RemoveGameObject(BaseGameObject gameObject) => _gameObjects.Remove(gameObject);
     protected abstract void SetInputManager();
     public event EventHandler<BaseGameState> OnStateSwitched;
     public event EventHandler<Events> OnEventNotification;

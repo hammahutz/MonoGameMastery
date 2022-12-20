@@ -70,14 +70,15 @@ public class MainGame : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        Font = Content.Load<SpriteFont>("Font");
+        Font = Content.Load<SpriteFont>("font/Font");
 
         SwitchGameState(new SplashState());
     }
 
     protected override void Update(GameTime gameTime)
     {
-        _currentGameState.HandleInput();
+        _currentGameState.HandleInput(gameTime);
+        _currentGameState.Update(gameTime);
         base.Update(gameTime);
     }
 

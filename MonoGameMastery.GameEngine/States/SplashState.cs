@@ -12,8 +12,8 @@ namespace MonoGameMastery.GameEngine.States;
 
 public class SplashState : BaseGameState
 {
-    public override void LoadContent() => AddGameObject(new SplashImage(LoadTexture("splash")));
-    public override void HandleInput()
+    public override void LoadContent() => AddGameObject(new SplashImage(LoadTexture("gfx/splash")));
+    public override void HandleInput(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter))
         {

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,8 +14,9 @@ namespace MonoGameMastery.GameEngine.States
 {
     public class GameplayState : BaseGameState
     {
-        private const string PlayerFighter = "fighter";
-        private const string Background = "Barren";
+        private const string PlayerFighter = "gfx/fighter";
+        private const string Background = "gfx/Barren";
+        private const string BulletTexture = "gfx/bullet";
 
         private const int _viewportWidth = 1280;
         private const int _viewportHeight = 720;
@@ -21,6 +24,12 @@ namespace MonoGameMastery.GameEngine.States
 
         private TerrainBackground _terrainBackground;
         private PlayerSprite _playerSprite;
+        private Texture2D _bulletTexture;
+        private List<BulletSprite> _bulletList;
+        private bool _isShooting;
+        private TimeSpan _lastShotAt;
+
+        public const double FIRE_RATE = 0.2;
 
         public override void LoadContent()
         {
@@ -30,11 +39,13 @@ namespace MonoGameMastery.GameEngine.States
             AddGameObject(_terrainBackground);
             AddGameObject(_playerSprite);
 
-            _playerSprite.Position = new Vector2(_viewportWidth / 2 - _playerSprite.Width / 2, _viewportHeight / 2 - _playerSprite.Height / 2 - 30);
+            _bulletTexture = LoadTexture(BulletTexture);
+            _bulletList = new List<BulletSprite>();
 
+            _playerSprite.Position = new Vector2(_viewportWidth / 2 - _playerSprite.Width / 2, _viewportHeight / 2 - _playerSprite.Height / 2 - 30);
         }
 
-        public override void HandleInput()
+        public override void HandleInput(GameTime gameTime)
         {
             InputManager.GetCommands(cmd =>
             {
@@ -50,10 +61,74 @@ namespace MonoGameMastery.GameEngine.States
                     _playerSprite.MoveRight();
                     KeepPlayerInBounds();
                 }
-                // if(cmd is GamePlayInputCommand.PlayerShoots)
-                //     _playerSprite.Shoot();
+                if (cmd is GamePlayInputCommand.PlayerShoots)
+                    Shoot(gameTime);
             });
         }
+
+        public override void Update(GameTime gameTime)
+        {
+            UpdateBullets(gameTime);
+            RemoveDeadBullets();
+        }
+
+        private void RemoveDeadBullets()
+        {
+            var newBulletList = new List<BulletSprite>();
+            foreach(var bullet in _bulletList)
+            {
+                var bulletStillOnScreen = bullet.Position.Y > -30;
+                if(bulletStillOnScreen)
+                    newBulletList.Add(bullet);
+                else
+                    RemoveGameObject(bullet);
+            }
+
+            _bulletList = newBulletList;
+        }
+
+        private void UpdateBullets(GameTime gameTime)
+        {
+            _bulletList.ForEach(bullet => bullet.MoveUp());
+
+            if (_lastShotAt != null && gameTime.TotalGameTime - _lastShotAt > TimeSpan.FromSeconds(FIRE_RATE)) ;
+            {
+                _isShooting = false;
+            }
+        }
+
+        private void Shoot(GameTime gameTime)
+        {
+            if (!_isShooting)
+            {
+                CreateBullets();
+                _isShooting = true;
+                _lastShotAt = gameTime.TotalGameTime;
+
+            }
+        }
+
+        private void CreateBullets()
+        {
+            var bulletSpriteLeft = new BulletSprite(_bulletTexture);
+            var bulletSpriteRight = new BulletSprite(_bulletTexture);
+
+            var bulletY = _playerSprite.Position.Y + 30;
+            var bulletLeftX = _playerSprite.Position.X + _playerSprite.Width / 2 + 10;
+            var bulletRightX = _playerSprite.Position.X + _playerSprite.Width / 2 - 40;
+
+            bulletSpriteLeft.Position = new Vector2(bulletLeftX, bulletY);
+            bulletSpriteRight.Position = new Vector2(bulletRightX, bulletY);
+
+            _bulletList.Add(bulletSpriteLeft);
+            _bulletList.Add(bulletSpriteRight);
+
+            AddGameObject(bulletSpriteLeft);
+            AddGameObject(bulletSpriteRight);
+            
+
+        }
+
         protected override void SetInputManager() => InputManager = new InputManager(new GameplayInputMapper());
 
         private void KeepPlayerInBounds()
