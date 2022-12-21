@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using MonoGameMastery.GameEngine.States;
-using MonoGameMastery.GameEngine.States.Base;
 
 namespace MonoGameMastery.GameEngine;
 
