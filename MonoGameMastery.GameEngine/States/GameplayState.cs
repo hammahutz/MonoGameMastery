@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -75,10 +76,10 @@ namespace MonoGameMastery.GameEngine.States
         private void RemoveDeadBullets()
         {
             var newBulletList = new List<BulletSprite>();
-            foreach(var bullet in _bulletList)
+            foreach (var bullet in _bulletList)
             {
                 var bulletStillOnScreen = bullet.Position.Y > -30;
-                if(bulletStillOnScreen)
+                if (bulletStillOnScreen)
                     newBulletList.Add(bullet);
                 else
                     RemoveGameObject(bullet);
@@ -91,7 +92,10 @@ namespace MonoGameMastery.GameEngine.States
         {
             _bulletList.ForEach(bullet => bullet.MoveUp());
 
-            if (_lastShotAt != null && gameTime.TotalGameTime - _lastShotAt > TimeSpan.FromSeconds(FIRE_RATE)) ;
+            var totalGameTime = gameTime.TotalGameTime - _lastShotAt;
+            var timeSpan = TimeSpan.FromSeconds(FIRE_RATE);
+            
+            if (totalGameTime > timeSpan) 
             {
                 _isShooting = false;
             }
@@ -125,7 +129,7 @@ namespace MonoGameMastery.GameEngine.States
 
             AddGameObject(bulletSpriteLeft);
             AddGameObject(bulletSpriteRight);
-            
+
 
         }
 

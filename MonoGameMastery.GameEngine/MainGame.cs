@@ -22,23 +22,33 @@ public class MainGame : Game
     private RenderTarget2D _renderTarget;
     private Rectangle _renderScaleRectangle;
 
-    private const int DESIGNED_RESOLUTION_WIDTH = 1280;
-    private const int DESIGNED_RESOLUTION_HEIGHT = 720;
-    private const float DESIGNED_RESOLUTION_ASPECT_RATION = DESIGNED_RESOLUTION_WIDTH / (float)DESIGNED_RESOLUTION_HEIGHT;
+    private int _designedResolutionWidth;
+    private int _designedResolutionHeight;
+    private float _designedResolutionAspectRation;
+    // private float _designedResolutionAspectRation = _designedResolutionWidth / (float)_designedResolutionHeight;
 
-    public MainGame()
+    private BaseGameState _firstGameState;
+
+    public MainGame(int width, int height, BaseGameState firstGameState)
     {
-        _graphics = new GraphicsDeviceManager(this);
-        _graphics.PreferredBackBufferWidth = 1024;
-        _graphics.PreferredBackBufferWidth = 768;
-        _graphics.IsFullScreen = false;
         Content.RootDirectory = "Content";
+        _graphics = new GraphicsDeviceManager(this)
+        {
+            PreferredBackBufferWidth = width,
+            PreferredBackBufferHeight = height,
+        };
+        _graphics.IsFullScreen = false;
         IsMouseVisible = true;
+
+        _firstGameState = firstGameState;
+        _designedResolutionAspectRation = width / (float)height;
+        _designedResolutionWidth = width;
+        _designedResolutionHeight = height;
     }
 
     protected override void Initialize()
     {
-        _renderTarget = new RenderTarget2D(_graphics.GraphicsDevice, DESIGNED_RESOLUTION_WIDTH, DESIGNED_RESOLUTION_HEIGHT, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
+        _renderTarget = new RenderTarget2D(_graphics.GraphicsDevice, _designedResolutionWidth, _designedResolutionHeight, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
         _renderScaleRectangle = GetScaleRectangle();
         base.Initialize();
     }
@@ -51,15 +61,15 @@ public class MainGame : Game
         Rectangle scaleRectangle;
 
 
-        if (actualAspectRation <= DESIGNED_RESOLUTION_ASPECT_RATION)
+        if (actualAspectRation <= _designedResolutionAspectRation)
         {
-            int presentHeight = (int)(Window.ClientBounds.Width / DESIGNED_RESOLUTION_ASPECT_RATION + variance);
+            int presentHeight = (int)(Window.ClientBounds.Width / _designedResolutionAspectRation + variance);
             int barHeight = (Window.ClientBounds.Height - presentHeight) / 2;
             scaleRectangle = new Rectangle(0, barHeight, Window.ClientBounds.Width, presentHeight);
         }
         else
         {
-            int presentWidth = (int)(Window.ClientBounds.Height / DESIGNED_RESOLUTION_ASPECT_RATION + variance);
+            int presentWidth = (int)(Window.ClientBounds.Height / _designedResolutionAspectRation + variance);
             int barWidth = (Window.ClientBounds.Width - presentWidth) / 2;
             scaleRectangle = new Rectangle(barWidth, 0, presentWidth, Window.ClientBounds.Height);
         }
@@ -72,7 +82,7 @@ public class MainGame : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         Font = Content.Load<SpriteFont>("font/Font");
 
-        SwitchGameState(new SplashState());
+        SwitchGameState(_firstGameState);
     }
 
     protected override void Update(GameTime gameTime)
@@ -130,7 +140,7 @@ public class MainGame : Game
         _currentGameState.LoadContent();
 
         _currentGameState.OnStateSwitched += CurrentGameState_OnStateSwitched;
-        _currentGameState.OnEventNotification  += _currentGameState_OnEventNotification;
+        _currentGameState.OnEventNotification += _currentGameState_OnEventNotification;
     }
     private void CurrentGameState_OnStateSwitched(object sender, BaseGameState e)
     {
