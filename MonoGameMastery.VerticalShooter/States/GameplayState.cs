@@ -9,18 +9,24 @@ using Microsoft.Xna.Framework.Input;
 
 using MonoGameMastery.GameEngine.Input;
 using MonoGameMastery.GameEngine.Objects;
+using MonoGameMastery.GameEngine.States;
 
-namespace MonoGameMastery.GameEngine.States
+namespace MonoGameMastery.VerticalShooter.States
 {
     public class GameplayState : BaseGameState
     {
-        private const string PlayerFighter = "gfx/fighter";
-        private const string Background = "gfx/Barren";
-        private const string BulletTexture = "gfx/bullet";
-        private const string FutureAmbient1 = "music/FutureAmbient_1";
-        private const string FutureAmbient2 = "music/FutureAmbient_2";
-        private const string FutureAmbient3 = "music/FutureAmbient_3";
-        private const string FutureAmbient4 = "music/FutureAmbient_4";
+        private const string GfxPlayer = "gfx/fighter";
+        private const string GfxBackground = "gfx/Barren";
+        private const string GfxBullet = "gfx/bullet";
+
+        private const string MusicFutureAmbient1 = "music/FutureAmbient_1";
+        private const string MusicFutureAmbient2 = "music/FutureAmbient_2";
+        private const string MusicFutureAmbient3 = "music/FutureAmbient_3";
+        private const string MusicFutureAmbient4 = "music/FutureAmbient_4";
+
+        private const string SfxBullet = "sfx/bullet";
+        private const string SfxEmpty = "sfx/empty";
+        private const string SfxMissile = "sfx/missile";
 
         private const int _viewportWidth = 1280;
         private const int _viewportHeight = 720;
@@ -37,24 +43,26 @@ namespace MonoGameMastery.GameEngine.States
 
         public override void LoadContent()
         {
-            _terrainBackground = new TerrainBackground(LoadTexture(Background));
-            _playerSprite = new PlayerSprite(LoadTexture(PlayerFighter));
+            _terrainBackground = new TerrainBackground(LoadTexture(GfxBackground));
+            _playerSprite = new PlayerSprite(LoadTexture(GfxPlayer));
 
             AddGameObject(_terrainBackground);
             AddGameObject(_playerSprite);
 
-            _bulletTexture = LoadTexture(BulletTexture);
+            _bulletTexture = LoadTexture(GfxBullet);
             _bulletList = new List<BulletSprite>();
 
             _playerSprite.Position = new Vector2(_viewportWidth / 2 - _playerSprite.Width / 2, _viewportHeight / 2 - _playerSprite.Height / 2 - 30);
 
-            _soundManager.SetSoundTrack(new List<SoundEffectInstance>() 
-            { 
-                LoadSounds(FutureAmbient1).CreateInstance(),
-                LoadSounds(FutureAmbient2).CreateInstance(),
-                LoadSounds(FutureAmbient3).CreateInstance(),
-                LoadSounds(FutureAmbient4).CreateInstance(),
+            _soundManager.SetSoundTrack(new List<SoundEffectInstance>()
+            {
+                LoadSounds(MusicFutureAmbient1).CreateInstance(),
+                LoadSounds(MusicFutureAmbient2).CreateInstance(),
+                LoadSounds(MusicFutureAmbient3).CreateInstance(),
+                LoadSounds(MusicFutureAmbient4).CreateInstance(),
             });
+
+            _soundManager.RegisterSound(new GamePlayEvents.PlayerShoot(), LoadSounds(SfxBullet));
         }
 
         public override void HandleInput(GameTime gameTime)
@@ -62,7 +70,7 @@ namespace MonoGameMastery.GameEngine.States
             InputManager.GetCommands(cmd =>
             {
                 if (cmd is GamePlayInputCommand.GameExit)
-                    NotifyEvent(Events.QUIT_GAME);
+                    NotifyEvent(new BaseGameStateEvent.GameQuit());
                 if (cmd is GamePlayInputCommand.PlayerMoveLeft)
                 {
                     _playerSprite.MoveLeft();
@@ -120,6 +128,7 @@ namespace MonoGameMastery.GameEngine.States
                 _isShooting = true;
                 _lastShotAt = gameTime.TotalGameTime;
 
+                NotifyEvent(new GamePlayEvents.PlayerShoot());
             }
         }
 

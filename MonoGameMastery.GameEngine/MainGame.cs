@@ -146,13 +146,16 @@ public class MainGame : Game
         SwitchGameState(e);
     }
 
-    private void _currentGameState_OnEventNotification(object sender, Events e)
+    private void _currentGameState_OnEventNotification(object sender, BaseGameStateEvent e)
     {
-        switch (e)
-        {
-            case Events.QUIT_GAME:
-                Exit();
-                break;
-        }
+        if (e.GetType() == typeof(BaseGameStateEvent.GameQuit))
+            Exit();
+
+        // switch (e.GetType())
+        // {
+        //     case typeof(BaseGameStateEvent.GameQuit:
+        //         Exit();
+        //         break;
+        // }
     }
 }

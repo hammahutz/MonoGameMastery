@@ -65,16 +65,18 @@ public abstract class BaseGameState
     }
 
     protected void SwitchState(BaseGameState gameState) => OnStateSwitched?.Invoke(this, gameState);
-    protected void NotifyEvent(Events eventType, object argument = null)
+    protected void NotifyEvent(BaseGameStateEvent eventType, object argument = null)
     {
         OnEventNotification?.Invoke(this, eventType);
         _gameObjects.ForEach(x => x.OnNotify(eventType));
+
+        _soundManager.OnNotify(eventType);
     }
     protected void AddGameObject(BaseGameObject gameObject) => _gameObjects.Add(gameObject);
     protected void RemoveGameObject(BaseGameObject gameObject) => _gameObjects.Remove(gameObject);
     protected abstract void SetInputManager();
     public event EventHandler<BaseGameState> OnStateSwitched;
-    public event EventHandler<Events> OnEventNotification;
+    public event EventHandler<BaseGameStateEvent> OnEventNotification;
 
 
 }

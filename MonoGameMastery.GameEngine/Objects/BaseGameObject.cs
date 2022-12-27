@@ -18,7 +18,7 @@ public abstract class BaseGameObject
 
     public int ZIndex = 0;
 
-    public virtual void OnNotify(Events eventType) { }
+    public virtual void OnNotify(BaseGameStateEvent eventType) { }
 
     public virtual void Draw(SpriteBatch spriteBatch) => spriteBatch.Draw(_texture2D, _position, Color.White);
 }

@@ -22,7 +22,7 @@ public class SplashState : BaseGameState
 
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         {
-            NotifyEvent(Events.QUIT_GAME);
+            NotifyEvent(new BaseGameStateEvent.GameQuit());
         }
     }
 
