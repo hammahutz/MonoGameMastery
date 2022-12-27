@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using MonoGameMastery.GameEngine.Input;
 using MonoGameMastery.GameEngine.Objects;
-
+using MonoGameMastery.GameEngine.Sound;
 
 namespace MonoGameMastery.GameEngine.States;
 public abstract class BaseGameState
 {
     private List<string> _assets = new List<string>();
     private ContentManager _contentManager;
+    protected SoundManager _soundManager = new SoundManager();
     private int _viewportWidth;
     private int _viewportHeight;
     public const string FallbackTexture = "Empty";
@@ -33,6 +35,7 @@ public abstract class BaseGameState
         SetInputManager();
     }
     public abstract void LoadContent();
+    public SoundEffect LoadSounds(string soundName) => _contentManager.Load<SoundEffect>(soundName);
     public void UnloadContent()
     {
         _contentManager.Unload();
@@ -42,7 +45,14 @@ public abstract class BaseGameState
     }
 
     public abstract void HandleInput(GameTime gameTime);
-    public virtual void Update(GameTime gameTime) { }
+
+    public virtual void UpdateGameState(GameTime gameTime){}
+    public void Update(GameTime gameTime)
+    {
+        UpdateGameState(gameTime);
+        _soundManager.PlaySoundtrack();
+    }
+
     public virtual void Draw(SpriteBatch spriteBatch) => _gameObjects.OrderBy(a => a.ZIndex).ToList().ForEach(x => x.Draw(spriteBatch));
     protected Texture2D LoadTexture(string textureName)
     {

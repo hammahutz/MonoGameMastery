@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -16,6 +17,10 @@ namespace MonoGameMastery.GameEngine.States
         private const string PlayerFighter = "gfx/fighter";
         private const string Background = "gfx/Barren";
         private const string BulletTexture = "gfx/bullet";
+        private const string FutureAmbient1 = "music/FutureAmbient_1";
+        private const string FutureAmbient2 = "music/FutureAmbient_2";
+        private const string FutureAmbient3 = "music/FutureAmbient_3";
+        private const string FutureAmbient4 = "music/FutureAmbient_4";
 
         private const int _viewportWidth = 1280;
         private const int _viewportHeight = 720;
@@ -42,6 +47,14 @@ namespace MonoGameMastery.GameEngine.States
             _bulletList = new List<BulletSprite>();
 
             _playerSprite.Position = new Vector2(_viewportWidth / 2 - _playerSprite.Width / 2, _viewportHeight / 2 - _playerSprite.Height / 2 - 30);
+
+            _soundManager.SetSoundTrack(new List<SoundEffectInstance>() 
+            { 
+                LoadSounds(FutureAmbient1).CreateInstance(),
+                LoadSounds(FutureAmbient2).CreateInstance(),
+                LoadSounds(FutureAmbient3).CreateInstance(),
+                LoadSounds(FutureAmbient4).CreateInstance(),
+            });
         }
 
         public override void HandleInput(GameTime gameTime)
@@ -65,7 +78,7 @@ namespace MonoGameMastery.GameEngine.States
             });
         }
 
-        public override void Update(GameTime gameTime)
+        public override void UpdateGameState(GameTime gameTime)
         {
             UpdateBullets(gameTime);
             RemoveDeadBullets();
@@ -92,8 +105,8 @@ namespace MonoGameMastery.GameEngine.States
 
             var totalGameTime = gameTime.TotalGameTime - _lastShotAt;
             var timeSpan = TimeSpan.FromSeconds(FIRE_RATE);
-            
-            if (totalGameTime > timeSpan) 
+
+            if (totalGameTime > timeSpan)
             {
                 _isShooting = false;
             }

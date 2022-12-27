@@ -27,6 +27,5 @@ public class SplashState : BaseGameState
     }
 
     protected override void SetInputManager() => InputManager = new InputManager(new GameplayInputMapper());
-
-
+    
 }
