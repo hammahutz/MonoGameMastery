@@ -46,7 +46,7 @@ public abstract class BaseGameState
 
     public abstract void HandleInput(GameTime gameTime);
 
-    public virtual void UpdateGameState(GameTime gameTime){}
+    public virtual void UpdateGameState(GameTime gameTime) { }
     public void Update(GameTime gameTime)
     {
         UpdateGameState(gameTime);
