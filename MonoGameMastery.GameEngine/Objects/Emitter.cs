@@ -19,6 +19,9 @@ public class Emitter : BaseGameObject
     private int _particlesEmittedPerUpdate = 0;
     private int _maxNbParticles = 0;
 
+    public int ActiveParticles { get => _activeParticles.Count; }
+    public int InactiveParticles { get => _inactiveParticles.Count; }
+
     public Emitter(Texture2D texture, Vector2 position, EmitterParticleState particleState, IEmitterType emitterType, int particleEmittedPerUpdate, int maxNbParticles)
     {
         _texture2D = texture;
@@ -81,7 +84,7 @@ public class Emitter : BaseGameObject
         var direction = _emitterType.GetParticleDirection();
         var position = _emitterType.GetParticlePosition(_position);
 
-        particle.Activate(lifespan, _position, direction, gravity, velocity, acceleration, rotation, scale, opacity, opacityFadingRate);
+        particle.Activate(lifespan, position, direction, gravity, velocity, acceleration, rotation, scale, opacity, opacityFadingRate);
         _activeParticles.AddLast(particle);
     }
 

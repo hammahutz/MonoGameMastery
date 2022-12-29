@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,16 +54,26 @@ public abstract class BaseGameState
         _soundManager.PlaySoundtrack();
     }
 
-    public virtual void Draw(SpriteBatch spriteBatch) => _gameObjects.OrderBy(a => a.ZIndex).ToList().ForEach(x => x.Draw(spriteBatch));
-    protected Texture2D LoadTexture(string textureName)
+    public void Draw(SpriteBatch spriteBatch)
     {
-        Texture2D texture = _contentManager.Load<Texture2D>(textureName);
-        if (texture != null)
-        {
-            _assets.Add(textureName);
-        }
-        return texture ?? _contentManager.Load<Texture2D>(FallbackTexture);
+        _gameObjects.OrderBy(a => a.ZIndex).ToList().ForEach(x => x.Draw(spriteBatch));
+        DrawGameState(spriteBatch);
     }
+
+    public virtual void DrawGameState(SpriteBatch spriteBatch) {}
+
+    protected Texture2D LoadTexture(string textureName) => _contentManager.Load<Texture2D>(textureName) ?? _contentManager.Load<Texture2D>(FallbackTexture);
+    // protected Texture2D LoadTexture(string textureName)
+    // {
+    //     Texture2D texture = _contentManager.Load<Texture2D>(textureName);
+    //     if (texture != null)
+    //     {
+    //         _assets.Add(textureName);
+    //     }
+    //     return texture ?? _contentManager.Load<Texture2D>(FallbackTexture);
+    // }
+
+    protected T LoadAsset<T>(string path) => _contentManager.Load<T>(path);
 
     protected void SwitchState(BaseGameState gameState) => OnStateSwitched?.Invoke(this, gameState);
     protected void NotifyEvent(BaseGameStateEvent eventType, object argument = null)

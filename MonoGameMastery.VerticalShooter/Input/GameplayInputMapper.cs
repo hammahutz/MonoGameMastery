@@ -25,6 +25,8 @@ namespace MonoGameMastery.GameEngine.Input
                 commands.Add(new GamePlayInputCommand.PlayerMoveRight());
             if(state.IsKeyDown(Keys.Space))
                 commands.Add(new GamePlayInputCommand.PlayerShoots());
+            if(state.IsKeyDown(Keys.LeftControl))
+                commands.Add(new GamePlayInputCommand.PlayerShootsMissile());
 
 
             return commands;

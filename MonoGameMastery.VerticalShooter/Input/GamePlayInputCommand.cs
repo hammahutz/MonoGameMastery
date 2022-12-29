@@ -13,6 +13,7 @@ namespace MonoGameMastery.GameEngine.Input
         public class PlayerMoveLeft : GamePlayInputCommand { }
         public class PlayerMoveRight : GamePlayInputCommand { }
         public class PlayerShoots : GamePlayInputCommand { }
+        public class PlayerShootsMissile : GamePlayInputCommand { }
 
     }
 }

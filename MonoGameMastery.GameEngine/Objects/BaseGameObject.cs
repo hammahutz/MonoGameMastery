@@ -14,11 +14,13 @@ public abstract class BaseGameObject
 
     public int Width { get => _texture2D.Width; }
     public int Height { get => _texture2D.Height; }
-    public Vector2 Position { get => _position; set => _position = value; }
+    public virtual Vector2 Position { get => _position; set => _position = value; }
 
     public int ZIndex = 0;
 
     public virtual void OnNotify(BaseGameStateEvent eventType) { }
+
+    public virtual void Update(GameTime gameTime) { }
 
     public virtual void Draw(SpriteBatch spriteBatch) => spriteBatch.Draw(_texture2D, _position, Color.White);
 }

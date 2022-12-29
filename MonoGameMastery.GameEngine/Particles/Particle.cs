@@ -27,6 +27,7 @@ public class Particle
         _acceleration = acceleration;
         _rotation = rotation;
         _opacityFadingRate = opacityFadingRate;
+        _age = 0;
 
         Position = position;
         Scale = scale;
