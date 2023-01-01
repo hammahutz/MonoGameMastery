@@ -22,9 +22,8 @@ public class Emitter : BaseGameObject
     public int ActiveParticles { get => _activeParticles.Count; }
     public int InactiveParticles { get => _inactiveParticles.Count; }
 
-    public Emitter(Texture2D texture, Vector2 position, EmitterParticleState particleState, IEmitterType emitterType, int particleEmittedPerUpdate, int maxNbParticles)
+    public Emitter(Texture2D texture, Vector2 position, EmitterParticleState particleState, IEmitterType emitterType, int particleEmittedPerUpdate, int maxNbParticles) : base(texture)
     {
-        _texture2D = texture;
         Position = position;
         _emitterParticleState = particleState;
         _emitterType = emitterType;

@@ -57,7 +57,7 @@ namespace MonoGameMastery.VerticalShooter.States
         public override void LoadContent()
         {
             _terrainBackground = new TerrainBackground(LoadTexture(GfxBackground));
-            _playerSprite = new PlayerSprite(LoadTexture(GfxPlayer));
+            _playerSprite = new PlayerSprite(LoadTexture(GfxPlayer)) { Position = new Vector2(500, 700) };
 
             AddGameObject(_terrainBackground);
             AddGameObject(_playerSprite);
@@ -133,6 +133,7 @@ namespace MonoGameMastery.VerticalShooter.States
         // }
 
         private static List<T> CleanObjects<T>(List<T> objectList) where T : BaseGameObject => (from x in objectList where IsWithinBounds(x) select x).ToList();
+
         private static bool IsWithinBounds<T>(T gameObject) where T : BaseGameObject => gameObject.Position.Y > -50;
 
 

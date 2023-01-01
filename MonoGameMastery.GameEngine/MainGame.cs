@@ -1,5 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System;
+﻿using System;
+using System.Security.Cryptography.X509Certificates;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,7 +23,7 @@ public class MainGame : Game
 
     private int _designedResolutionWidth;
     private int _designedResolutionHeight;
-    private float _designedResolutionAspectRation;
+    private float _designedResolutionAspectRatio;
     // private float _designedResolutionAspectRation = _designedResolutionWidth / (float)_designedResolutionHeight;
 
     private BaseGameState _firstGameState;
@@ -31,22 +31,23 @@ public class MainGame : Game
     public MainGame(int width, int height, BaseGameState firstGameState)
     {
         Content.RootDirectory = "Content";
-        _graphics = new GraphicsDeviceManager(this)
-        {
-            PreferredBackBufferWidth = width,
-            PreferredBackBufferHeight = height,
-        };
-        _graphics.IsFullScreen = false;
-        IsMouseVisible = true;
+        _graphics = new GraphicsDeviceManager(this);
 
         _firstGameState = firstGameState;
-        _designedResolutionAspectRation = width / (float)height;
+
         _designedResolutionWidth = width;
         _designedResolutionHeight = height;
+        _designedResolutionAspectRatio = width / (float)height;
     }
 
     protected override void Initialize()
     {
+        _graphics.PreferredBackBufferWidth = _designedResolutionWidth;
+        _graphics.PreferredBackBufferHeight = _designedResolutionHeight;
+        _graphics.IsFullScreen = false;
+        IsMouseVisible = true;
+        _graphics.ApplyChanges();
+
         _renderTarget = new RenderTarget2D(_graphics.GraphicsDevice, _designedResolutionWidth, _designedResolutionHeight, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
         _renderScaleRectangle = GetScaleRectangle();
         base.Initialize();
@@ -54,22 +55,23 @@ public class MainGame : Game
 
     private Rectangle GetScaleRectangle()
     {
-        double variance = 0.5;
-        float actualAspectRation = Window.ClientBounds.Width / (float)Window.ClientBounds.Height;
+        var variance = 0.5;
+        var actualAspectRatio = Window.ClientBounds.Width / (float)Window.ClientBounds.Height;
 
         Rectangle scaleRectangle;
 
-
-        if (actualAspectRation <= _designedResolutionAspectRation)
+        if (actualAspectRatio <= _designedResolutionAspectRatio)
         {
-            int presentHeight = (int)(Window.ClientBounds.Width / _designedResolutionAspectRation + variance);
-            int barHeight = (Window.ClientBounds.Height - presentHeight) / 2;
+            var presentHeight = (int)(Window.ClientBounds.Width / _designedResolutionAspectRatio + variance);
+            var barHeight = (Window.ClientBounds.Height - presentHeight) / 2;
+
             scaleRectangle = new Rectangle(0, barHeight, Window.ClientBounds.Width, presentHeight);
         }
         else
         {
-            int presentWidth = (int)(Window.ClientBounds.Height / _designedResolutionAspectRation + variance);
-            int barWidth = (Window.ClientBounds.Width - presentWidth) / 2;
+            var presentWidth = (int)(Window.ClientBounds.Height * _designedResolutionAspectRatio + variance);
+            var barWidth = (Window.ClientBounds.Width - presentWidth) / 2;
+
             scaleRectangle = new Rectangle(barWidth, 0, presentWidth, Window.ClientBounds.Height);
         }
 

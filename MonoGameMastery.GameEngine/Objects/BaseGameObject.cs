@@ -17,8 +17,12 @@ public abstract class BaseGameObject
     public virtual Vector2 Position { get => _position; set => _position = value; }
 
     public int ZIndex = 0;
+    public EventHandler<BaseGameStateEvent> OnObjectChanged;
+
+    public BaseGameObject(Texture2D texture2D) => _texture2D = texture2D;
 
     public virtual void OnNotify(BaseGameStateEvent eventType) { }
+    public void SendEvent(BaseGameStateEvent eventType) => OnObjectChanged?.Invoke(this, eventType);
 
     public virtual void Update(GameTime gameTime) { }
 

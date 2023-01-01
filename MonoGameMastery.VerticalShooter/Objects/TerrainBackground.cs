@@ -7,11 +7,7 @@ public class TerrainBackground : BaseGameObject
 {
     private const float SCROLLING_SPEED = 30;
 
-    public TerrainBackground(Texture2D texture2D)
-    {
-        _texture2D = texture2D;
-        _position = Vector2.Zero;
-    }
+    public TerrainBackground(Texture2D texture2D) : base(texture2D) => _position = Vector2.Zero;
 
 
     //TODO Move logic to update function with Game time to do frame independent and move workload form draw to update

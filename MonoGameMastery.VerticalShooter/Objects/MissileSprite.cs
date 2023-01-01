@@ -25,9 +25,8 @@ namespace MonoGameMastery.VerticalShooter.Objects
             }
         }
 
-        public MissileSprite(Texture2D missileTexture, Texture2D exhaustTexture)
+        public MissileSprite(Texture2D missileTexture, Texture2D exhaustTexture) : base(missileTexture)
         {
-            _texture2D = missileTexture;
             _exhaustEmitter = new ExhaustEmitter(exhaustTexture, _position);
 
             float ratio = (float)_texture2D.Height / (float)_texture2D.Width;
