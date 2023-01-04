@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -14,73 +15,124 @@ using MonoGameMastery.GameEngine.Input;
 using MonoGameMastery.GameEngine.Objects;
 using MonoGameMastery.GameEngine.States;
 using MonoGameMastery.VerticalShooter.Objects;
+using MonoGameMastery.VerticalShooter.Objects.Chopper;
+using MonoGameMastery.VerticalShooter.Particles;
+
+using static MonoGameMastery.VerticalShooter.Globals;
 
 namespace MonoGameMastery.VerticalShooter.States
 {
     public class GameplayState : BaseGameState
     {
-        private const string GfxPlayer = "gfx/fighter";
-        private const string GfxBackground = "gfx/Barren";
-        private const string GfxBullet = "gfx/bullet";
-        private const string GfxExhaust = "gfx/Cloud001";
-        private const string GfxMissile = "gfx/Missile05";
+        private const int VIEWPORT_WIDTH = 1280;
+        private const int VIEWPORT_HEIGHT = 720;
+        public const double FIRE_RATE = 0.2;
+        public const double MISSILE_FIRE_RATE = 1.0;
+        private const int MAX_EXPLOSION_AGE = 600;
+        private const int EXPLOSION_ACTIVE_LENGTH = 75;
 
-        private const string MusicFutureAmbient1 = "music/FutureAmbient_1";
-        private const string MusicFutureAmbient2 = "music/FutureAmbient_2";
-        private const string MusicFutureAmbient3 = "music/FutureAmbient_3";
-        private const string MusicFutureAmbient4 = "music/FutureAmbient_4";
-
-        private const string SfxBullet = "sfx/bullet";
-        private const string SfxEmpty = "sfx/empty";
-        private const string SfxMissile = "sfx/missile";
-
-        private const int _viewportWidth = 1280;
-        private const int _viewportHeight = 720;
-
+        private bool _isShooting;
+        private bool _isShootingMissile;
+        private TimeSpan _lastShotAt;
+        private TimeSpan _lastShotMissileAt;
+        private ChopperGenerator _chopperGenerator;
 
         private TerrainBackground _terrainBackground;
         private PlayerSprite _playerSprite;
         private Texture2D _bulletTexture;
         private Texture2D _missileTexture;
         private Texture2D _exhaustTexture;
+        private Texture2D _chopperTexture;
+        private Texture2D _explosionTexture;
 
         private List<BulletSprite> _bulletList;
         private List<MissileSprite> _missileList;
-        private bool _isShooting;
-        private bool _isShootingMissile;
-        private TimeSpan _lastShotAt;
-        private TimeSpan _lastShotMissileAt;
+        private List<ExplosionEmitter> _explosionList;
+        private List<ChopperSprite> _enemyList;
 
-        public const double FIRE_RATE = 0.2;
-        public const double MISSILE_FIRE_RATE = 1.0;
+
 
         public override void LoadContent()
         {
-            _terrainBackground = new TerrainBackground(LoadTexture(GfxBackground));
-            _playerSprite = new PlayerSprite(LoadTexture(GfxPlayer)) { Position = new Vector2(500, 700) };
+            _terrainBackground = new TerrainBackground(LoadTexture(GFX_BACKGROUND));
+            _bulletTexture = LoadTexture(GFX_BULLET);
+            _playerSprite = new PlayerSprite(LoadTexture(GFX_PLAYER));
+            _missileTexture = LoadTexture(GFX_MISSILE);
+            _exhaustTexture = LoadTexture(GFX_EXHAUST);
+            _explosionTexture = LoadTexture(GFX_EXPLOSION);
+            _chopperTexture = LoadTexture(GFX_CHOPPER);
+
+            _bulletList = new List<BulletSprite>();
+            _missileList = new List<MissileSprite>();
+            _explosionList = new List<ExplosionEmitter>();
+            _enemyList = new List<ChopperSprite>();
+
+            _playerSprite.Position = new Vector2(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT - _playerSprite.Height - 10);
+            _chopperGenerator = new ChopperGenerator(_chopperTexture, 4, AddChopper);
+
 
             AddGameObject(_terrainBackground);
             AddGameObject(_playerSprite);
-
-            _bulletTexture = LoadTexture(GfxBullet);
-            _bulletList = new List<BulletSprite>();
-
-            _missileTexture = LoadTexture(GfxMissile);
-            _missileList = new List<MissileSprite>();
-            _exhaustTexture = LoadTexture(GfxExhaust);
-
-            _playerSprite.Position = new Vector2(_viewportWidth / 2 - _playerSprite.Width / 2, _viewportHeight / 2 - _playerSprite.Height / 2 - 30);
+            _chopperGenerator.GenerateChoppers();
 
             _soundManager.SetSoundTrack(new List<SoundEffectInstance>()
             {
-                LoadSounds(MusicFutureAmbient1).CreateInstance(),
-                LoadSounds(MusicFutureAmbient2).CreateInstance(),
-                LoadSounds(MusicFutureAmbient3).CreateInstance(),
-                LoadSounds(MusicFutureAmbient4).CreateInstance(),
+                LoadSounds(MUSIC_FUTURE_AMBIENT1).CreateInstance(),
+                LoadSounds(MUSIC_FUTURE_AMBIENT2).CreateInstance(),
+                LoadSounds(MUSIC_FUTURE_AMBIENT3).CreateInstance(),
+                LoadSounds(MUSIC_FUTURE_AMBIENT4).CreateInstance(),
             });
 
-            _soundManager.RegisterSound(new GamePlayEvents.PlayerShoot(), LoadSounds(SfxBullet));
-            _soundManager.RegisterSound(new GamePlayEvents.PlayerShootMissile(), LoadSounds(SfxMissile)); //TODO WHAT WHY DON't //TODO WHAT WHY DON'T I HAVE IMPLEMENT THIS IN PAGE 186!?!?!?!?!?!?!? 
+            _soundManager.RegisterSound(new GamePlayEvents.PlayerShoot(), LoadSounds(SFX_BULLET));
+            _soundManager.RegisterSound(new GamePlayEvents.PlayerShootMissile(), LoadSounds(SFX_MISSILE)); //TODO WHAT WHY DON't //TODO WHAT WHY DON'T I HAVE IMPLEMENT THIS IN PAGE 186!?!?!?!?!?!?!? 
+        }
+
+        private void AddChopper(ChopperSprite chopper)
+        {
+            chopper.OnObjectChanged += _chopperSprite_OnObjectChanged;
+            _enemyList.Add(chopper);
+            AddGameObject(chopper);
+        }
+
+        private void _chopperSprite_OnObjectChanged(object sender, BaseGameStateEvent e)
+        {
+            var chopper = (ChopperSprite)sender;
+
+            switch (e)
+            {
+                case GamePlayEvents.EnemyLostLife ge:
+                    if (ge.CurrentLife <= 0)
+                    {
+                        AddExplosion(new Vector2(chopper.Position.X - 40, chopper.Position.Y - 40));
+                        chopper.Destroy();
+                    }
+                    break;
+            }
+
+        }
+
+        private void AddExplosion(Vector2 position)
+        {
+            var explosion = new ExplosionEmitter(_explosionTexture, position);
+            _explosionList.Add(explosion);
+            AddGameObject(explosion);
+        }
+
+        private void UpdateExplosion(GameTime gameTime)
+        {
+            foreach (var explosion in _explosionList)
+            {
+                explosion.Update(gameTime);
+                if (explosion.Age > EXPLOSION_ACTIVE_LENGTH)
+                {
+                    explosion.Deactivate();
+                }
+                if (explosion.Age > MAX_EXPLOSION_AGE)
+                {
+                    RemoveGameObject(explosion);
+                }
+
+            }
         }
 
         public override void HandleInput(GameTime gameTime)
@@ -108,29 +160,15 @@ namespace MonoGameMastery.VerticalShooter.States
         {
             UpdateProjectiles(gameTime, _bulletList, FIRE_RATE, _lastShotAt, ref _isShooting);
             UpdateProjectiles(gameTime, _missileList, MISSILE_FIRE_RATE, _lastShotMissileAt, ref _isShootingMissile);
+            UpdateExplosion(gameTime);
+            _enemyList.ForEach(x => x.Update(gameTime));
 
-            CleanObjects(_bulletList);
-            CleanObjects(_missileList);
+            _bulletList = CleanObjects(_bulletList);
+            _missileList = CleanObjects(_missileList);
+            _enemyList = CleanObjects(_enemyList);
+            _explosionList = CleanObjects(_explosionList);
+
         }
-
-
-        // private List<T> CleanObjects<T>(List<T> objectList) where T : BaseGameObject
-        // {
-        //     List<T> listOfItemsToKeep = new List<T>();
-        //     foreach (T gameObject in objectList)
-        //     {
-        //         var stillOnScreen = gameObject.Position.Y > -50;
-        //         if (stillOnScreen)
-        //         {
-        //             listOfItemsToKeep.Add(gameObject);
-        //         }
-        //         else
-        //         {
-        //             RemoveGameObject(gameObject);
-        //         }
-        //     }
-        //     return listOfItemsToKeep;
-        // }
 
         private static List<T> CleanObjects<T>(List<T> objectList) where T : BaseGameObject => (from x in objectList where IsWithinBounds(x) select x).ToList();
 
@@ -206,18 +244,19 @@ namespace MonoGameMastery.VerticalShooter.States
 
         }
 
+
         protected override void SetInputManager() => InputManager = new InputManager(new GameplayInputMapper());
 
         private void KeepPlayerInBounds()
         {
             if (_playerSprite.Position.X < 0)
                 _playerSprite.Position = new Vector2(0, _playerSprite.Position.Y);
-            if (_playerSprite.Position.X + _playerSprite.Width > _viewportWidth)
-                _playerSprite.Position = new Vector2(_viewportWidth - _playerSprite.Width, _playerSprite.Position.Y);
+            if (_playerSprite.Position.X + _playerSprite.Width > VIEWPORT_WIDTH)
+                _playerSprite.Position = new Vector2(VIEWPORT_WIDTH - _playerSprite.Width, _playerSprite.Position.Y);
             if (_playerSprite.Position.Y < 0)
                 _playerSprite.Position = new Vector2(_playerSprite.Position.X, 0);
             if (_playerSprite.Position.Y < 0)
-                _playerSprite.Position = new Vector2(_playerSprite.Position.X, _viewportWidth - _playerSprite.Position.Y);
+                _playerSprite.Position = new Vector2(_playerSprite.Position.X, VIEWPORT_WIDTH - _playerSprite.Position.Y);
         }
 
     }

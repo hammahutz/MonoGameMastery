@@ -10,14 +10,16 @@ namespace MonoGameMastery.GameEngine.Objects;
 
 public class Emitter : BaseGameObject
 {
-    private LinkedList<Particle> _activeParticles = new LinkedList<Particle>();
-    private LinkedList<Particle> _inactiveParticles = new LinkedList<Particle>();
+    private readonly LinkedList<Particle> _activeParticles = new LinkedList<Particle>();
+    private readonly LinkedList<Particle> _inactiveParticles = new LinkedList<Particle>();
 
-    private EmitterParticleState _emitterParticleState;
-    private IEmitterType _emitterType;
+    private readonly EmitterParticleState _emitterParticleState;
+    private readonly IEmitterType _emitterType;
 
-    private int _particlesEmittedPerUpdate = 0;
-    private int _maxNbParticles = 0;
+    private readonly int _particlesEmittedPerUpdate = 0;
+    private readonly int _maxNbParticles = 0;
+    private bool _active = true;
+    public int Age { get; private set; } = 0;
 
     public int ActiveParticles { get => _activeParticles.Count; }
     public int InactiveParticles { get => _inactiveParticles.Count; }
@@ -30,10 +32,17 @@ public class Emitter : BaseGameObject
         _particlesEmittedPerUpdate = particleEmittedPerUpdate;
         _maxNbParticles = maxNbParticles;
     }
-
-    public void Update(GameTime gameTime)
+    public void Deactivate()
     {
-        EmitParticles();
+        _active = false;
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        if (_active)
+        {
+            EmitParticles();
+        }
 
         var particleNode = _activeParticles.First;
         while (particleNode != null)
@@ -49,6 +58,7 @@ public class Emitter : BaseGameObject
 
             particleNode = nextNode;
         }
+        Age++;
     }
 
     public override void Draw(SpriteBatch spriteBatch)

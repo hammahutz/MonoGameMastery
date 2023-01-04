@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGameMastery.GameEngine.Objects;
 using MonoGameMastery.GameEngine.Util;
 
-namespace MonoGameMastery.VerticalShooter.Objects;
+namespace MonoGameMastery.VerticalShooter.Objects.Chopper;
 
 public abstract class BaseChopperPart
 {

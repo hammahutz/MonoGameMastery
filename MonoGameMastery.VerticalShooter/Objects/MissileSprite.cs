@@ -12,9 +12,9 @@ namespace MonoGameMastery.VerticalShooter.Objects
         private const float Acceleration = 0.15f;
 
         private float _speed = StartSpeed;
-        private int _missileWidth;
-        private int _missileHeight;
-        private ExhaustEmitter _exhaustEmitter;
+        private readonly int _missileWidth;
+        private readonly int _missileHeight;
+        private readonly ExhaustEmitter _exhaustEmitter;
 
         public override Vector2 Position
         {

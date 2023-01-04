@@ -2,7 +2,7 @@ using System;
 
 using Microsoft.Xna.Framework;
 
-namespace MonoGameMastery.VerticalShooter.Objects;
+namespace MonoGameMastery.VerticalShooter.Objects.Chopper;
 
 public class ChopperBody : BaseChopperPart
 {

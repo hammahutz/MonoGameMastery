@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,19 +59,9 @@ public abstract class BaseGameState
         DrawGameState(spriteBatch);
     }
 
-    public virtual void DrawGameState(SpriteBatch spriteBatch) {}
+    public virtual void DrawGameState(SpriteBatch spriteBatch) { }
 
     protected Texture2D LoadTexture(string textureName) => _contentManager.Load<Texture2D>(textureName) ?? _contentManager.Load<Texture2D>(FallbackTexture);
-    // protected Texture2D LoadTexture(string textureName)
-    // {
-    //     Texture2D texture = _contentManager.Load<Texture2D>(textureName);
-    //     if (texture != null)
-    //     {
-    //         _assets.Add(textureName);
-    //     }
-    //     return texture ?? _contentManager.Load<Texture2D>(FallbackTexture);
-    // }
-
     protected T LoadAsset<T>(string path) => _contentManager.Load<T>(path);
 
     protected void SwitchState(BaseGameState gameState) => OnStateSwitched?.Invoke(this, gameState);

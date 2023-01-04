@@ -9,40 +9,44 @@ using Microsoft.Xna.Framework.Input;
 using MonoGameMastery.GameEngine.Input;
 using MonoGameMastery.GameEngine.Objects;
 using MonoGameMastery.GameEngine.States;
+using MonoGameMastery.GameEngine.Util;
 using MonoGameMastery.VerticalShooter.Input;
 using MonoGameMastery.VerticalShooter.Objects;
+using MonoGameMastery.VerticalShooter.Objects.Chopper;
 using MonoGameMastery.VerticalShooter.Particles;
+
+using static MonoGameMastery.VerticalShooter.Globals;
 
 namespace MonoGameMastery.VerticalShooter.States;
 
 public class DevState : BaseGameState
 {
-    private const string GFX_EXHAUST = "gfx/Cloud001";
-    private const string GFX_MISSILE = "gfx/Missile05";
-    private const string GFX_FIGHTER = "gfx/Fighter";
-    private const string FONT_DEBUG = "font/font";
-    private const string GFX_CHOPPER = "gfx/chopper-44x99";
-    private const string GFX_DEBUG = "gfx/Empty";
-
-
-
     private PlayerSprite _player;
     private MissileSprite _missile;
     private ExhaustEmitter _exhaustEmitter;
+    private ExplosionEmitter _explosionEmitter;
     private ChopperSprite _chopperSprite;
     private SpriteFont _debugFont;
 
 
-    private Rectangle _debugRect = new Rectangle(1280-100, 720-100, 100, 100);
+    private Rectangle _debugRect = new Rectangle(1280 - 100, 720 - 100, 100, 100);
     private Texture2D _debugTexture;
 
     private string _debugText;
+    private int _debugFrames;
 
     public override void LoadContent()
     {
         _exhaustEmitter = new ExhaustEmitter(LoadTexture(GFX_EXHAUST), new Vector2(300, 300));
-        _player = new PlayerSprite(LoadTexture(GFX_FIGHTER)) { Position = new Vector2(500, 600) };
-        _chopperSprite = new ChopperSprite(LoadTexture(GFX_CHOPPER), new List<(int, Vector2)>()) { Position = new Vector2(100, 100) };
+        _explosionEmitter = new ExplosionEmitter(LoadTexture(GFX_EXPLOSION), new Vector2(300, 300));
+        _player = new PlayerSprite(LoadTexture(GFX_PLAYER)) { Position = new Vector2(500, 600) };
+        _chopperSprite = new ChopperSprite(LoadTexture(GFX_CHOPPER), new List<(int, Vector2)>()
+        {
+            (0, new Vector2()),
+            (60, new Vector2(50, 50)),
+            (240, new Vector2(50, -50)),
+            (300, new Vector2(-50, -50)),
+        });
 
         AddGameObject(_exhaustEmitter);
         AddGameObject(_player);
@@ -69,6 +73,9 @@ public class DevState : BaseGameState
                     Position = new Vector2(_player.Position.X, _player.Position.Y - 25)
                 };
                 AddGameObject(_missile);
+
+                _explosionEmitter = new ExplosionEmitter(LoadTexture(GFX_EXPLOSION), new Vector2(100, 100));
+                AddGameObject(_explosionEmitter);
             }
         });
     }
@@ -78,6 +85,7 @@ public class DevState : BaseGameState
         UpdateDebugText(gameTime);
 
         _exhaustEmitter.Update(gameTime);
+        _explosionEmitter.Update(gameTime);
         _exhaustEmitter.Position = new Vector2(_exhaustEmitter.Position.X, _exhaustEmitter.Position.Y - 3f);
         if (_exhaustEmitter.Position.Y < 50)
         {
@@ -101,19 +109,21 @@ public class DevState : BaseGameState
     {
         _debugText = "";
 
-        AddDebugText("FPS", (int)(1 / gameTime.ElapsedGameTime.TotalSeconds));
-        AddDebugText("Frame time milliseconds", gameTime.ElapsedGameTime.Milliseconds);
-        AddDebugText("Is running slowly?", gameTime.IsRunningSlowly);
-        AddDebugText("Active particles", _exhaustEmitter.ActiveParticles);
-        AddDebugText("Inactive particles", _exhaustEmitter.InactiveParticles);
-        AddDebugText("Mouse Position: ", Mouse.GetState().Position);
+        DebugText.AddDebugText("FPS", (int)(1 / gameTime.ElapsedGameTime.TotalSeconds));
+        DebugText.AddDebugText("Frame time milliseconds", gameTime.ElapsedGameTime.Milliseconds);
+        DebugText.AddDebugText("Total Frames", _debugFrames);
+        DebugText.AddDebugText("Game time", (int)gameTime.TotalGameTime.TotalSeconds);
+        DebugText.AddDebugText("Is running slowly?", gameTime.IsRunningSlowly);
+        DebugText.AddDebugText("Active particles", _exhaustEmitter.ActiveParticles);
+        DebugText.AddDebugText("Inactive particles", _exhaustEmitter.InactiveParticles);
+        DebugText.AddDebugText("Mouse Position: ", Mouse.GetState().Position);
+
+        _debugFrames++;
     }
-
-    private void AddDebugText<T>(string label, T text) => _debugText = string.IsNullOrEmpty(_debugText) ? label + ": " + text.ToString() : _debugText + '\n' + label + ": " + text.ToString();
-
     public override void DrawGameState(SpriteBatch spriteBatch)
     {
         spriteBatch.DrawString(_debugFont, _debugText, new Vector2(10), Color.YellowGreen);
         spriteBatch.Draw(_debugTexture, _debugRect, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.0f);
+        DebugText.DrawDebugText(spriteBatch, _debugFont);
     }
 }

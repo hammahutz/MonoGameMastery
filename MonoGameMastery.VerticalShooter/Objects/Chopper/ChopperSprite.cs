@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Metadata;
+using System.Xml;
 
 using Microsoft.VisualBasic;
 using Microsoft.Win32;
@@ -13,14 +15,14 @@ using MonoGameMastery.GameEngine.Util;
 using MonoGameMastery.VerticalShooter.States;
 
 
-namespace MonoGameMastery.VerticalShooter.Objects;
+namespace MonoGameMastery.VerticalShooter.Objects.Chopper;
 
 public class ChopperSprite : BaseGameObject
 {
     private const float SPEED = 4.0f;
     private Vector2 _direction = Vector2.Zero;
-    private int age = 0;
-    private List<(int, Vector2)> _path;
+    private float _age = 0.0f;
+    private readonly List<(int, Vector2)> _path;
 
     private readonly List<BaseChopperPart> _bodyParts;
 
@@ -40,7 +42,7 @@ public class ChopperSprite : BaseGameObject
             new ChopperBody(chopperSprite, new Vector2(chopperSprite.Width / 2f, 34)),
             new ChopperBlades(bladeSprite, bladeSprite.Origin()),
         };
-        
+
         _path = path;
     }
 
@@ -61,7 +63,25 @@ public class ChopperSprite : BaseGameObject
         _life -= gameObject.Damage;
     }
 
-    public override void Update(GameTime gameTime) => _bodyParts.ForEach(x => x.Update(Position));
+    public override void Update(GameTime gameTime)
+    {
+        _path
+            .Where(p => _age > p.Item1).ToList()
+            .ForEach(p => _direction = p.Item2);
+
+        if(_direction.Length() > 0.0f)
+            _direction.Normalize();
+
+        Position += _direction * SPEED;
+        _age++;
+
+        _bodyParts.ForEach(x => x.Update(Position));
+    }
 
     public override void Draw(SpriteBatch spriteBatch) => _bodyParts.ForEach(x => x.Draw(spriteBatch, _texture2D));
+
+    internal void Destroy()
+    {
+        throw new NotImplementedException();
+    }
 }
