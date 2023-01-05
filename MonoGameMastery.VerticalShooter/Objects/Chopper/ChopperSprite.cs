@@ -28,6 +28,7 @@ public class ChopperSprite : BaseGameObject
 
     private int _life = 40;
     private int _hitAt;
+    private Rectangle BB = new(-16, -63, 34, 98);
 
 
 
@@ -44,6 +45,8 @@ public class ChopperSprite : BaseGameObject
         };
 
         _path = path;
+
+        AddBoundingBox(new GameEngine.Objects.BoundingBox(BB.Location.ToVector2(), BB.Width, BB.Height));
     }
 
     public override void OnNotify(BaseGameStateEvent eventType)
@@ -78,7 +81,11 @@ public class ChopperSprite : BaseGameObject
         _bodyParts.ForEach(x => x.Update(Position));
     }
 
-    public override void Draw(SpriteBatch spriteBatch) => _bodyParts.ForEach(x => x.Draw(spriteBatch, _texture2D));
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        DrawBoundingBoxes(spriteBatch);
+        _bodyParts.ForEach(x => x.Draw(spriteBatch, _texture2D));
+    }
 
     internal void Destroy()
     {

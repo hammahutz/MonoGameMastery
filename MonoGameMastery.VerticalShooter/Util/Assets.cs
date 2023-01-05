@@ -1,6 +1,9 @@
-namespace MonoGameMastery.VerticalShooter;
+using System;
+using System.Collections.Generic;
 
-public static class Globals
+namespace MonoGameMastery.VerticalShooter.Util;
+
+public static class Assets
 {
     public const string GFX_PLAYER = "gfx/fighter";
     public const string GFX_BACKGROUND = "gfx/Barren";

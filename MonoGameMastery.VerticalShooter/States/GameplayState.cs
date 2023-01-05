@@ -17,8 +17,8 @@ using MonoGameMastery.GameEngine.States;
 using MonoGameMastery.VerticalShooter.Objects;
 using MonoGameMastery.VerticalShooter.Objects.Chopper;
 using MonoGameMastery.VerticalShooter.Particles;
+using MonoGameMastery.VerticalShooter.Util;
 
-using static MonoGameMastery.VerticalShooter.Globals;
 
 namespace MonoGameMastery.VerticalShooter.States
 {
@@ -54,13 +54,13 @@ namespace MonoGameMastery.VerticalShooter.States
 
         public override void LoadContent()
         {
-            _terrainBackground = new TerrainBackground(LoadTexture(GFX_BACKGROUND));
-            _bulletTexture = LoadTexture(GFX_BULLET);
-            _playerSprite = new PlayerSprite(LoadTexture(GFX_PLAYER));
-            _missileTexture = LoadTexture(GFX_MISSILE);
-            _exhaustTexture = LoadTexture(GFX_EXHAUST);
-            _explosionTexture = LoadTexture(GFX_EXPLOSION);
-            _chopperTexture = LoadTexture(GFX_CHOPPER);
+            _terrainBackground = new TerrainBackground(LoadTexture(Assets.GFX_BACKGROUND));
+            _bulletTexture = LoadTexture(Assets.GFX_BULLET);
+            _playerSprite = new PlayerSprite(LoadTexture(Assets.GFX_PLAYER));
+            _missileTexture = LoadTexture(Assets.GFX_MISSILE);
+            _exhaustTexture = LoadTexture(Assets.GFX_EXHAUST);
+            _explosionTexture = LoadTexture(Assets.GFX_EXPLOSION);
+            _chopperTexture = LoadTexture(Assets.GFX_CHOPPER);
 
             _bulletList = new List<BulletSprite>();
             _missileList = new List<MissileSprite>();
@@ -77,14 +77,14 @@ namespace MonoGameMastery.VerticalShooter.States
 
             _soundManager.SetSoundTrack(new List<SoundEffectInstance>()
             {
-                LoadSounds(MUSIC_FUTURE_AMBIENT1).CreateInstance(),
-                LoadSounds(MUSIC_FUTURE_AMBIENT2).CreateInstance(),
-                LoadSounds(MUSIC_FUTURE_AMBIENT3).CreateInstance(),
-                LoadSounds(MUSIC_FUTURE_AMBIENT4).CreateInstance(),
+                LoadSounds(Assets.MUSIC_FUTURE_AMBIENT1).CreateInstance(),
+                LoadSounds(Assets.MUSIC_FUTURE_AMBIENT2).CreateInstance(),
+                LoadSounds(Assets.MUSIC_FUTURE_AMBIENT3).CreateInstance(),
+                LoadSounds(Assets.MUSIC_FUTURE_AMBIENT4).CreateInstance(),
             });
 
-            _soundManager.RegisterSound(new GamePlayEvents.PlayerShoot(), LoadSounds(SFX_BULLET));
-            _soundManager.RegisterSound(new GamePlayEvents.PlayerShootMissile(), LoadSounds(SFX_MISSILE)); //TODO WHAT WHY DON't //TODO WHAT WHY DON'T I HAVE IMPLEMENT THIS IN PAGE 186!?!?!?!?!?!?!? 
+            _soundManager.RegisterSound(new GamePlayEvents.PlayerShoot(), LoadSounds(Assets.SFX_BULLET));
+            _soundManager.RegisterSound(new GamePlayEvents.PlayerShootMissile(), LoadSounds(Assets.SFX_MISSILE)); //TODO WHAT WHY DON't //TODO WHAT WHY DON'T I HAVE IMPLEMENT THIS IN PAGE 186!?!?!?!?!?!?!? 
         }
 
         private void AddChopper(ChopperSprite chopper)

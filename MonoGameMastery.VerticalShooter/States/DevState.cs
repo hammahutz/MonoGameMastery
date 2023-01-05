@@ -10,12 +10,12 @@ using MonoGameMastery.GameEngine.Input;
 using MonoGameMastery.GameEngine.Objects;
 using MonoGameMastery.GameEngine.States;
 using MonoGameMastery.GameEngine.Util;
+using MonoGameMastery.VerticalShooter.Util;
 using MonoGameMastery.VerticalShooter.Input;
 using MonoGameMastery.VerticalShooter.Objects;
 using MonoGameMastery.VerticalShooter.Objects.Chopper;
 using MonoGameMastery.VerticalShooter.Particles;
 
-using static MonoGameMastery.VerticalShooter.Globals;
 
 namespace MonoGameMastery.VerticalShooter.States;
 
@@ -37,10 +37,10 @@ public class DevState : BaseGameState
 
     public override void LoadContent()
     {
-        _exhaustEmitter = new ExhaustEmitter(LoadTexture(GFX_EXHAUST), new Vector2(300, 300));
-        _explosionEmitter = new ExplosionEmitter(LoadTexture(GFX_EXPLOSION), new Vector2(300, 300));
-        _player = new PlayerSprite(LoadTexture(GFX_PLAYER)) { Position = new Vector2(500, 600) };
-        _chopperSprite = new ChopperSprite(LoadTexture(GFX_CHOPPER), new List<(int, Vector2)>()
+        _exhaustEmitter = new ExhaustEmitter(LoadTexture(Assets.GFX_EXHAUST), new Vector2(300, 300));
+        _explosionEmitter = new ExplosionEmitter(LoadTexture(Assets.GFX_EXPLOSION), new Vector2(300, 300));
+        _player = new PlayerSprite(LoadTexture(Assets.GFX_PLAYER)) { Position = new Vector2(500, 600) };
+        _chopperSprite = new ChopperSprite(LoadTexture(Assets.GFX_CHOPPER), new List<(int, Vector2)>()
         {
             (0, new Vector2()),
             (60, new Vector2(50, 50)),
@@ -52,8 +52,8 @@ public class DevState : BaseGameState
         AddGameObject(_player);
         AddGameObject(_chopperSprite);
 
-        _debugFont = LoadAsset<SpriteFont>(FONT_DEBUG);
-        _debugTexture = LoadAsset<Texture2D>(GFX_DEBUG);
+        _debugFont = LoadAsset<SpriteFont>(Assets.FONT_DEBUG);
+        _debugTexture = LoadAsset<Texture2D>(Assets.GFX_DEBUG);
 
     }
     protected override void SetInputManager() => InputManager = new InputManager(new DevInputMapper());
@@ -68,13 +68,13 @@ public class DevState : BaseGameState
             if (cmd is DevInputCommand.DevShoot)
             {
 
-                _missile = new MissileSprite(LoadTexture(GFX_MISSILE), LoadTexture(GFX_EXHAUST))
+                _missile = new MissileSprite(LoadTexture(Assets.GFX_MISSILE), LoadTexture(Assets.GFX_EXHAUST))
                 {
                     Position = new Vector2(_player.Position.X, _player.Position.Y - 25)
                 };
                 AddGameObject(_missile);
 
-                _explosionEmitter = new ExplosionEmitter(LoadTexture(GFX_EXPLOSION), new Vector2(100, 100));
+                _explosionEmitter = new ExplosionEmitter(LoadTexture(Assets.GFX_EXPLOSION), new Vector2(100, 100));
                 AddGameObject(_explosionEmitter);
             }
         });
