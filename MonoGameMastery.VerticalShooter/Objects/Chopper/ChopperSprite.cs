@@ -1,11 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Xml;
 
-using Microsoft.VisualBasic;
-using Microsoft.Win32;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,7 +8,6 @@ using MonoGameMastery.GameEngine.Objects;
 using MonoGameMastery.GameEngine.States;
 using MonoGameMastery.GameEngine.Util;
 using MonoGameMastery.VerticalShooter.States;
-
 
 namespace MonoGameMastery.VerticalShooter.Objects.Chopper;
 
@@ -30,11 +24,8 @@ public class ChopperSprite : BaseGameObject
     private int _hitAt;
     private Rectangle BB = new(-16, -63, 34, 98);
 
-
-
     public ChopperSprite(Texture2D texture2D, List<(int, Vector2)> path) : base(texture2D)
     {
-
         var chopperSprite = new Rectangle(0, 0, 44, 98);
         var bladeSprite = new Rectangle(133, 98, 94, 94);
 
@@ -72,7 +63,7 @@ public class ChopperSprite : BaseGameObject
             .Where(p => _age > p.Item1).ToList()
             .ForEach(p => _direction = p.Item2);
 
-        if(_direction.Length() > 0.0f)
+        if (_direction.Length() > 0.0f)
             _direction.Normalize();
 
         Position += _direction * SPEED;
@@ -85,10 +76,5 @@ public class ChopperSprite : BaseGameObject
     {
         DrawBoundingBoxes(spriteBatch);
         _bodyParts.ForEach(x => x.Draw(spriteBatch, _texture2D));
-    }
-
-    internal void Destroy()
-    {
-        throw new NotImplementedException();
     }
 }

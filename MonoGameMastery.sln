@@ -3,19 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameMastery.GameEngine", "MonoGameMastery.GameEngine\MonoGameMastery.GameEngine.csproj", "{0405F794-8DD7-4564-8C44-F761F21FD2C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGameMastery.GameEngine", "MonoGameMastery.GameEngine\MonoGameMastery.GameEngine.csproj", "{0405F794-8DD7-4564-8C44-F761F21FD2C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameMastery.OpenGL", "MonoGameMastery.OpenGL\MonoGameMastery.OpenGL.csproj", "{DB4B8683-53BE-4640-9F55-CC0CC0C93BBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGameMastery.OpenGL", "MonoGameMastery.OpenGL\MonoGameMastery.OpenGL.csproj", "{DB4B8683-53BE-4640-9F55-CC0CC0C93BBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameMastery.VerticalShooter", "MonoGameMastery.VerticalShooter\MonoGameMastery.VerticalShooter.csproj", "{B7076D69-B7BA-475E-8F76-B82FC1D72D6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGameMastery.VerticalShooter", "MonoGameMastery.VerticalShooter\MonoGameMastery.VerticalShooter.csproj", "{B7076D69-B7BA-475E-8F76-B82FC1D72D6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameMastery.DirectX", "MonoGameMastery.DirectX\MonoGameMastery.DirectX.csproj", "{31F6FD1B-532F-413F-AB5D-C804C162AAA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0405F794-8DD7-4564-8C44-F761F21FD2C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +29,15 @@ Global
 		{B7076D69-B7BA-475E-8F76-B82FC1D72D6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7076D69-B7BA-475E-8F76-B82FC1D72D6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7076D69-B7BA-475E-8F76-B82FC1D72D6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31F6FD1B-532F-413F-AB5D-C804C162AAA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31F6FD1B-532F-413F-AB5D-C804C162AAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31F6FD1B-532F-413F-AB5D-C804C162AAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31F6FD1B-532F-413F-AB5D-C804C162AAA7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EDE05A3E-87B9-4732-8662-C47C031F2342}
 	EndGlobalSection
 EndGlobal

@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 using MonoGameMastery.GameEngine.Input;
 using MonoGameMastery.GameEngine.Objects;
@@ -18,7 +14,6 @@ using MonoGameMastery.VerticalShooter.Objects;
 using MonoGameMastery.VerticalShooter.Objects.Chopper;
 using MonoGameMastery.VerticalShooter.Particles;
 using MonoGameMastery.VerticalShooter.Util;
-
 
 namespace MonoGameMastery.VerticalShooter.States
 {
@@ -49,8 +44,7 @@ namespace MonoGameMastery.VerticalShooter.States
         private List<MissileSprite> _missileList;
         private List<ExplosionEmitter> _explosionList;
         private List<ChopperSprite> _enemyList;
-
-
+        private bool _playerDead;
 
         public override void LoadContent()
         {
@@ -70,7 +64,6 @@ namespace MonoGameMastery.VerticalShooter.States
             _playerSprite.Position = new Vector2(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT - _playerSprite.Height - 10);
             _chopperGenerator = new ChopperGenerator(_chopperTexture, 4, AddChopper);
 
-
             AddGameObject(_terrainBackground);
             AddGameObject(_playerSprite);
             _chopperGenerator.GenerateChoppers();
@@ -84,7 +77,7 @@ namespace MonoGameMastery.VerticalShooter.States
             });
 
             _soundManager.RegisterSound(new GamePlayEvents.PlayerShoot(), LoadSounds(Assets.SFX_BULLET));
-            _soundManager.RegisterSound(new GamePlayEvents.PlayerShootMissile(), LoadSounds(Assets.SFX_MISSILE)); //TODO WHAT WHY DON't //TODO WHAT WHY DON'T I HAVE IMPLEMENT THIS IN PAGE 186!?!?!?!?!?!?!? 
+            _soundManager.RegisterSound(new GamePlayEvents.PlayerShootMissile(), LoadSounds(Assets.SFX_MISSILE)); //TODO WHAT WHY DON't //TODO WHAT WHY DON'T I HAVE IMPLEMENT THIS IN PAGE 186!?!?!?!?!?!?!?
         }
 
         private void AddChopper(ChopperSprite chopper)
@@ -108,7 +101,6 @@ namespace MonoGameMastery.VerticalShooter.States
                     }
                     break;
             }
-
         }
 
         private void AddExplosion(Vector2 position)
@@ -131,7 +123,6 @@ namespace MonoGameMastery.VerticalShooter.States
                 {
                     RemoveGameObject(explosion);
                 }
-
             }
         }
 
@@ -151,8 +142,6 @@ namespace MonoGameMastery.VerticalShooter.States
                     Shoot(gameTime);
                 if (cmd is GamePlayInputCommand.PlayerShootsMissile)
                     ShootMissile(gameTime);
-
-
             });
         }
 
@@ -168,13 +157,60 @@ namespace MonoGameMastery.VerticalShooter.States
             _enemyList = CleanObjects(_enemyList);
             _explosionList = CleanObjects(_explosionList);
 
+            DetectCollision();
         }
 
-        private static List<T> CleanObjects<T>(List<T> objectList) where T : BaseGameObject => (from x in objectList where IsWithinBounds(x) select x).ToList();
+        private void DetectCollision()
+        {
+            var bulletCollsionDetector = new AABBCollisionDetector<BulletSprite, ChopperSprite>(_bulletList);
+            var missileCollsionDetector = new AABBCollisionDetector<MissileSprite, ChopperSprite>(_missileList);
+            var playerCollsionDetector = new AABBCollisionDetector<ChopperSprite, PlayerSprite>(_enemyList);
+
+            bulletCollsionDetector.DetectCollisions(_enemyList, (bullet, choppper) =>
+            {
+                var hitEvent = new GamePlayEvents.ChopperHitBy(bullet);
+                choppper.OnNotify(hitEvent);
+                _soundManager.OnNotify(hitEvent);
+                bullet.Destroy();
+            });
+
+            missileCollsionDetector.DetectCollisions(_enemyList, (missile, choppper) =>
+            {
+                var hitEvent = new GamePlayEvents.ChopperHitBy(missile);
+                choppper.OnNotify(hitEvent);
+                _soundManager.OnNotify(hitEvent);
+                missile.Destroy();
+            });
+            playerCollsionDetector.DetectCollisions(_playerSprite, (chopper, player) => { KillPlayer(); });
+        }
+
+        private async void KillPlayer()
+        {
+            Console.WriteLine("Kill Player");
+            _playerDead = true;
+            AddExplosion(_playerSprite.Position);
+            RemoveGameObject(_playerSprite);
+
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            ResetGame();
+        }
+
+        private void ResetGame()
+        {
+            Console.WriteLine("Reset Game");
+        }
+
+        protected List<T> CleanObjects<T>(List<T> objectList) where T : BaseGameObject
+        {
+            (from x in objectList
+             where !IsWithinBounds(x) || x.Destroyed
+             select x).ToList()
+             .ForEach(x => RemoveGameObject(x));
+
+            return (from x in objectList where IsWithinBounds(x) && !x.Destroyed select x).ToList();
+        }
 
         private static bool IsWithinBounds<T>(T gameObject) where T : BaseGameObject => gameObject.Position.Y > -50;
-
-
 
         private static void UpdateProjectiles<T>(GameTime gameTime, List<T> projectiles, double fireRate, TimeSpan lastShotAt, ref bool isShooting) where T : BaseGameObject
         {
@@ -200,6 +236,7 @@ namespace MonoGameMastery.VerticalShooter.States
                 NotifyEvent(new GamePlayEvents.PlayerShoot());
             }
         }
+
         private void ShootMissile(GameTime gameTime)
         {
             if (!_isShootingMissile)
@@ -240,10 +277,7 @@ namespace MonoGameMastery.VerticalShooter.States
 
             AddGameObject(bulletSpriteLeft);
             AddGameObject(bulletSpriteRight);
-
-
         }
-
 
         protected override void SetInputManager() => InputManager = new InputManager(new GameplayInputMapper());
 
@@ -258,6 +292,5 @@ namespace MonoGameMastery.VerticalShooter.States
             if (_playerSprite.Position.Y < 0)
                 _playerSprite.Position = new Vector2(_playerSprite.Position.X, VIEWPORT_WIDTH - _playerSprite.Position.Y);
         }
-
     }
 }

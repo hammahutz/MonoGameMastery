@@ -30,7 +30,9 @@ public abstract class BaseGameObject
             _position = value;
         }
     }
-    protected List<BoundingBox> BoundingBoxes { get => _boundingBoxes; }
+    public List<BoundingBox> BoundingBoxes { get => _boundingBoxes; }
+    public bool Destroyed { get; set; }
+
     public int ZIndex = 0;
     public EventHandler<BaseGameStateEvent> OnObjectChanged;
 
@@ -59,5 +61,10 @@ public abstract class BaseGameObject
     {
         _boundingTexture = new Texture2D(graphicsDevice, 1, 1);
         _boundingTexture.SetData<Color>(new Color[] { Color.White });
+    }
+
+    public virtual void Destroy()
+    {
+
     }
 }
