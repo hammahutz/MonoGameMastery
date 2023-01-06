@@ -1,9 +1,6 @@
-using System.Runtime.CompilerServices;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using MonoGameMastery.GameEngine.Objects;
 using MonoGameMastery.GameEngine.Util;
 
 namespace MonoGameMastery.VerticalShooter.Objects.Chopper;
@@ -32,8 +29,8 @@ public abstract class BaseChopperPart
         UpdatePart(position);
     }
 
-    protected virtual void UpdatePart(Vector2 position) { }
+    protected virtual void UpdatePart(Vector2 position)
+    { }
 
     public void Draw(SpriteBatch spriteBatch, Texture2D texture2D) => spriteBatch.Draw(texture2D, _destinationRectangle, _sourceRectangle, _color, _rotation, _origin, SpriteEffects.None, 0.0f);
-
 }

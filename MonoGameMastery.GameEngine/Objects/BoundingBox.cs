@@ -4,7 +4,6 @@ namespace MonoGameMastery.GameEngine.Objects;
 
 public class BoundingBox
 {
-
     public Vector2 Position { get; set; }
     public float Width { get; set; }
     public float Height { get; set; }
@@ -23,13 +22,13 @@ public class BoundingBox
         Width = size.X;
         Height = size.Y;
     }
+
     public BoundingBox(Rectangle rectangle)
     {
         Position = rectangle.Location.ToVector2();
         Width = rectangle.Size.X;
         Height = rectangle.Size.Y;
     }
-
 
     public bool CollidesWith(BoundingBox bb) => Position.X < bb.Position.X + bb.Width &&
                                                 Position.X + Width > bb.Position.X &&

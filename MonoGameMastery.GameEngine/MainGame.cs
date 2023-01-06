@@ -1,9 +1,5 @@
-﻿using System;
-using System.Security.Cryptography.X509Certificates;
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 using MonoGameMastery.GameEngine.States;
 
@@ -19,6 +15,7 @@ public class MainGame : Game
 
     //Book page 65
     private RenderTarget2D _renderTarget;
+
     private Rectangle _renderScaleRectangle;
 
     private int _designedResolutionWidth;
@@ -107,7 +104,6 @@ public class MainGame : Game
         base.UnloadContent();
     }
 
-
     private void DrawGame()
     {
         GraphicsDevice.SetRenderTarget(_renderTarget);
@@ -118,6 +114,7 @@ public class MainGame : Game
         _currentGameState.Draw(_spriteBatch);
         _spriteBatch.End();
     }
+
     private void DrawToScreen()
     {
         _graphics.GraphicsDevice.SetRenderTarget(null);
@@ -143,6 +140,7 @@ public class MainGame : Game
         _currentGameState.OnStateSwitched += CurrentGameState_OnStateSwitched;
         _currentGameState.OnEventNotification += _currentGameState_OnEventNotification;
     }
+
     private void CurrentGameState_OnStateSwitched(object sender, BaseGameState e)
     {
         SwitchGameState(e);

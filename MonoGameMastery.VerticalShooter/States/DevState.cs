@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 
-using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,12 +8,11 @@ using MonoGameMastery.GameEngine.Input;
 using MonoGameMastery.GameEngine.Objects;
 using MonoGameMastery.GameEngine.States;
 using MonoGameMastery.GameEngine.Util;
-using MonoGameMastery.VerticalShooter.Util;
 using MonoGameMastery.VerticalShooter.Input;
 using MonoGameMastery.VerticalShooter.Objects;
 using MonoGameMastery.VerticalShooter.Objects.Chopper;
 using MonoGameMastery.VerticalShooter.Particles;
-
+using MonoGameMastery.VerticalShooter.Util;
 
 namespace MonoGameMastery.VerticalShooter.States;
 
@@ -27,7 +24,6 @@ public class DevState : BaseGameState
     private ExplosionEmitter _explosionEmitter;
     private ChopperSprite _chopperSprite;
     private SpriteFont _debugFont;
-
 
     private Rectangle _debugRect = new Rectangle(1280 - 100, 720 - 100, 100, 100);
     private Texture2D _debugTexture;
@@ -54,9 +50,10 @@ public class DevState : BaseGameState
 
         _debugFont = LoadAsset<SpriteFont>(Assets.FONT_DEBUG);
         _debugTexture = LoadAsset<Texture2D>(Assets.GFX_DEBUG);
-
     }
+
     protected override void SetInputManager() => InputManager = new InputManager(new DevInputMapper());
+
     public override void HandleInput(GameTime gameTime)
     {
         InputManager.GetCommands(cmd =>
@@ -67,7 +64,6 @@ public class DevState : BaseGameState
             }
             if (cmd is DevInputCommand.DevShoot)
             {
-
                 _missile = new MissileSprite(LoadTexture(Assets.GFX_MISSILE), LoadTexture(Assets.GFX_EXHAUST))
                 {
                     Position = new Vector2(_player.Position.X, _player.Position.Y - 25)
@@ -102,7 +98,6 @@ public class DevState : BaseGameState
         }
 
         _chopperSprite.Update(gameTime);
-
     }
 
     private void UpdateDebugText(GameTime gameTime)
@@ -120,6 +115,7 @@ public class DevState : BaseGameState
 
         _debugFrames++;
     }
+
     public override void DrawGameState(SpriteBatch spriteBatch)
     {
         spriteBatch.DrawString(_debugFont, _debugText, new Vector2(10), Color.YellowGreen);

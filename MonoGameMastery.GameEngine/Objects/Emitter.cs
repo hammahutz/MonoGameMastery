@@ -32,6 +32,7 @@ public class Emitter : BaseGameObject
         _particlesEmittedPerUpdate = particleEmittedPerUpdate;
         _maxNbParticles = maxNbParticles;
     }
+
     public void Deactivate()
     {
         _active = false;

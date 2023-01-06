@@ -9,7 +9,6 @@ public class TerrainBackground : BaseGameObject
 
     public TerrainBackground(Texture2D texture2D) : base(texture2D) => _position = Vector2.Zero;
 
-
     //TODO Move logic to update function with Game time to do frame independent and move workload form draw to update
     public override void Draw(SpriteBatch spriteBatch)
     {
@@ -30,5 +29,4 @@ public class TerrainBackground : BaseGameObject
 
         _position.Y = (int)(_position.Y + SCROLLING_SPEED) % _texture2D.Height;
     }
-
 }

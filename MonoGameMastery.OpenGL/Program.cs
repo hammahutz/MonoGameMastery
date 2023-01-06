@@ -3,7 +3,6 @@
 const int WIDTH = 1280;
 const int HEIGHT = 720;
 
-
 MonoGameMastery.GameEngine.States.BaseGameState setup = new MonoGameMastery.VerticalShooter.States.SplashState();
 
 args?.ToList().ForEach(x =>
@@ -13,6 +12,7 @@ args?.ToList().ForEach(x =>
             case "d":
                 setup = new MonoGameMastery.VerticalShooter.States.DevState();
                 break;
+
             case "q":
                 setup = new MonoGameMastery.VerticalShooter.States.GameplayState();
                 break;

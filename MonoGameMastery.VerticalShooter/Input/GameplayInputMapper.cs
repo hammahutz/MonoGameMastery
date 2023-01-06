@@ -1,10 +1,5 @@
-using System.Collections;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-using MonoGameMastery.GameEngine.Input;
 using Microsoft.Xna.Framework.Input;
 
 namespace MonoGameMastery.GameEngine.Input
@@ -15,19 +10,16 @@ namespace MonoGameMastery.GameEngine.Input
         {
             var commands = new List<GamePlayInputCommand>();
 
-
-
-            if(state.IsKeyDown(Keys.Escape))
+            if (state.IsKeyDown(Keys.Escape))
                 commands.Add(new GamePlayInputCommand.GameExit());
-            if(state.IsKeyDown(Keys.Left))
+            if (state.IsKeyDown(Keys.Left))
                 commands.Add(new GamePlayInputCommand.PlayerMoveLeft());
-            if(state.IsKeyDown(Keys.Right))
+            if (state.IsKeyDown(Keys.Right))
                 commands.Add(new GamePlayInputCommand.PlayerMoveRight());
-            if(state.IsKeyDown(Keys.Space))
+            if (state.IsKeyDown(Keys.Space))
                 commands.Add(new GamePlayInputCommand.PlayerShoots());
-            if(state.IsKeyDown(Keys.LeftControl))
+            if (state.IsKeyDown(Keys.LeftControl))
                 commands.Add(new GamePlayInputCommand.PlayerShootsMissile());
-
 
             return commands;
         }

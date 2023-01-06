@@ -6,7 +6,7 @@ using MonoGameMastery.GameEngine.Input;
 
 namespace MonoGameMastery.VerticalShooter.Input;
 
-public  class DevInputMapper : BaseInputMapper
+public class DevInputMapper : BaseInputMapper
 {
     public override IEnumerable<BaseInputCommand> GetKeyboardState(KeyboardState state)
     {

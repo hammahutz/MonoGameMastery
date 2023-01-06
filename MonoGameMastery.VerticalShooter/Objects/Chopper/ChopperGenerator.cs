@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Timers;
@@ -45,9 +44,10 @@ public class ChopperGenerator
         _choppersGenerated = 0;
         _timer.Start();
     }
+
     private void _timer_Elapsed(object sender, ElapsedEventArgs e)
     {
-        (Vector2, Vector2, Vector2) chopperData = _generateLeft ? 
+        (Vector2, Vector2, Vector2) chopperData = _generateLeft ?
         (Right, DownRight, new Vector2(-200, 100)) : (Left, DownLeft, new Vector2(1500, 100));
 
         List<(int, Vector2)> path = new List<(int, Vector2)>()
@@ -55,13 +55,13 @@ public class ChopperGenerator
             (0, chopperData.Item1),
             (2 * FRAME_SECOND, chopperData.Item2),
         };
-        var chopper = new ChopperSprite(_texture2D, path) { Position = chopperData.Item3};
+        var chopper = new ChopperSprite(_texture2D, path) { Position = chopperData.Item3 };
         _chopperHandler(chopper);
 
         _generateLeft = !_generateLeft;
         _choppersGenerated++;
 
-        if(_choppersGenerated == _maxNbChoppers)
+        if (_choppersGenerated == _maxNbChoppers)
         {
             StopGenerating();
         }

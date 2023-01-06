@@ -13,6 +13,7 @@ public class ExhaustEmitter : Emitter
     private static Vector2 _direction = new Vector2(0.0f, 1.0f);
     private const float Spread = 1.5f;
 
-    public ExhaustEmitter(Texture2D texture, Vector2 position) : base(texture, position, new ExhaustParticleState(), new ConeEmitterType(_direction, Spread), NbParticles, MaxNbParticles) { }
-
+    public ExhaustEmitter(Texture2D texture, Vector2 position) : base(texture, position, new ExhaustParticleState(), new ConeEmitterType(_direction, Spread), NbParticles, MaxNbParticles)
+    {
+    }
 }

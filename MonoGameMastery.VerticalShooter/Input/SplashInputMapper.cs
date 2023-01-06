@@ -1,11 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework.Input;
-
-using MonoGameMastery.GameEngine.Input;
 
 namespace MonoGameMastery.GameEngine.Input
 {
@@ -15,9 +10,8 @@ namespace MonoGameMastery.GameEngine.Input
         {
             var commands = new List<SplashInputCommand>();
 
-            if(state.IsKeyDown(Keys.Enter))
+            if (state.IsKeyDown(Keys.Enter))
                 commands.Add(new SplashInputCommand.GameSelect());
-
 
             return commands;
         }

@@ -16,9 +16,9 @@ public abstract class BaseGameObject
     protected Vector2 _position;
     protected List<BoundingBox> _boundingBoxes = new();
 
-
     public int Width { get => _texture2D.Width; }
     public int Height { get => _texture2D.Height; }
+
     public virtual Vector2 Position
     {
         get => _position;
@@ -30,6 +30,7 @@ public abstract class BaseGameObject
             _position = value;
         }
     }
+
     public List<BoundingBox> BoundingBoxes { get => _boundingBoxes; }
     public bool Destroyed { get; set; }
 
@@ -38,9 +39,14 @@ public abstract class BaseGameObject
 
     public BaseGameObject(Texture2D texture2D) => _texture2D = texture2D;
 
-    public virtual void OnNotify(BaseGameStateEvent eventType) { }
+    public virtual void OnNotify(BaseGameStateEvent eventType)
+    { }
+
     public void SendEvent(BaseGameStateEvent eventType) => OnObjectChanged?.Invoke(this, eventType);
-    public virtual void Update(GameTime gameTime) { }
+
+    public virtual void Update(GameTime gameTime)
+    { }
+
     public virtual void Draw(SpriteBatch spriteBatch)
     {
         if (Global.DEBUG) DrawBoundingBoxes(spriteBatch);
@@ -48,6 +54,7 @@ public abstract class BaseGameObject
     }
 
     public void AddBoundingBox(BoundingBox bb) => _boundingBoxes.Add(bb);
+
     public void DrawBoundingBoxes(SpriteBatch spriteBatch)
     {
         if (_boundingTexture == null)
@@ -65,6 +72,5 @@ public abstract class BaseGameObject
 
     public virtual void Destroy()
     {
-
     }
 }

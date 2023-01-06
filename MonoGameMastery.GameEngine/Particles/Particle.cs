@@ -14,11 +14,10 @@ public class Particle
     private float _opacityFadingRate;
 
     public Vector2 Position { get; private set; }
-    public float  Scale { get; private set; }
-    public float Opacity { get; private set; }    
+    public float Scale { get; private set; }
+    public float Opacity { get; private set; }
 
-
-    public void Activate(int lifespan, Vector2 position, Vector2 direction, Vector2 gravity, float velocity, float acceleration, float rotation, float scale, float opacity, float opacityFadingRate) 
+    public void Activate(int lifespan, Vector2 position, Vector2 direction, Vector2 gravity, float velocity, float acceleration, float rotation, float scale, float opacity, float opacityFadingRate)
     {
         _lifespan = lifespan;
         _direction = direction;

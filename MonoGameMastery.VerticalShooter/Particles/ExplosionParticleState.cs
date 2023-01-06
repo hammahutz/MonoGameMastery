@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 using MonoGameMastery.GameEngine.Particles;
 
-using mathUtil =  MonoGameMastery.GameEngine.Util.MathUtil;
+using mathUtil = MonoGameMastery.GameEngine.Util.MathUtil;
 
 namespace MonoGameMastery.VerticalShooter.Particles;
 

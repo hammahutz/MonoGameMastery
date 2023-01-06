@@ -24,14 +24,16 @@ namespace MonoGameMastery.GameEngine.Particles
         public abstract float Scale { get; }
         public abstract float ScaleDeviation { get; }
 
-
         protected float GenerateFloat(float startN, float deviation) => RandomNumberGenerator.NextRandom(startN - deviation / 2.0f, startN + deviation / 2.0f);
 
         public int GenerateLifeSpan() => RandomNumberGenerator.NextRandom(MinLifeSpan, MaxLifeSpan);
-        public float GenerateVelocity() => RandomNumberGenerator.NextRandom(Velocity, VelocityDeviation);
-        public float GenerateOpacity() => RandomNumberGenerator.NextRandom(Opacity, OpacityDeviation);
-        public float GenerateRotation() => RandomNumberGenerator.NextRandom(Rotation, RotationDeviation);
-        public float GenerateScale() => RandomNumberGenerator.NextRandom(Scale, ScaleDeviation);
 
+        public float GenerateVelocity() => RandomNumberGenerator.NextRandom(Velocity, VelocityDeviation);
+
+        public float GenerateOpacity() => RandomNumberGenerator.NextRandom(Opacity, OpacityDeviation);
+
+        public float GenerateRotation() => RandomNumberGenerator.NextRandom(Rotation, RotationDeviation);
+
+        public float GenerateScale() => RandomNumberGenerator.NextRandom(Scale, ScaleDeviation);
     }
 }

@@ -16,5 +16,6 @@ public class ConeEmitterType : IEmitterType
     }
 
     public Vector2 GetParticleDirection() => Direction == null ? Vector2.Zero : MathUtil.GenerateDeviationFloat(Direction.ToAngle(), Spread).ToVector();
+
     public Vector2 GetParticlePosition(Vector2 emitterPosition) => new Vector2(emitterPosition.X, emitterPosition.Y);
 }

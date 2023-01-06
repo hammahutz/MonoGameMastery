@@ -12,6 +12,7 @@ using MonoGameMastery.GameEngine.Objects;
 using MonoGameMastery.GameEngine.Sound;
 
 namespace MonoGameMastery.GameEngine.States;
+
 public abstract class BaseGameState
 {
     private List<string> _assets = new List<string>();
@@ -23,7 +24,6 @@ public abstract class BaseGameState
 
     protected InputManager InputManager { get; set; }
 
-
     private readonly List<BaseGameObject> _gameObjects = new List<BaseGameObject>();
 
     public void Initialize(ContentManager contentManager, int viewportWidth, int viewportHeight)
@@ -34,8 +34,11 @@ public abstract class BaseGameState
 
         SetInputManager();
     }
+
     public abstract void LoadContent();
+
     public SoundEffect LoadSounds(string soundName) => _contentManager.Load<SoundEffect>(soundName);
+
     public void UnloadContent()
     {
         _contentManager.Unload();
@@ -46,7 +49,9 @@ public abstract class BaseGameState
 
     public abstract void HandleInput(GameTime gameTime);
 
-    public virtual void UpdateGameState(GameTime gameTime) { }
+    public virtual void UpdateGameState(GameTime gameTime)
+    { }
+
     public void Update(GameTime gameTime)
     {
         UpdateGameState(gameTime);
@@ -59,12 +64,15 @@ public abstract class BaseGameState
         DrawGameState(spriteBatch);
     }
 
-    public virtual void DrawGameState(SpriteBatch spriteBatch) { }
+    public virtual void DrawGameState(SpriteBatch spriteBatch)
+    { }
 
     protected Texture2D LoadTexture(string textureName) => _contentManager.Load<Texture2D>(textureName) ?? _contentManager.Load<Texture2D>(FallbackTexture);
+
     protected T LoadAsset<T>(string path) => _contentManager.Load<T>(path);
 
     protected void SwitchState(BaseGameState gameState) => OnStateSwitched?.Invoke(this, gameState);
+
     protected void NotifyEvent(BaseGameStateEvent eventType, object argument = null)
     {
         OnEventNotification?.Invoke(this, eventType);
@@ -72,11 +80,14 @@ public abstract class BaseGameState
 
         _soundManager.OnNotify(eventType);
     }
+
     protected void AddGameObject(BaseGameObject gameObject) => _gameObjects.Add(gameObject);
+
     protected void RemoveGameObject(BaseGameObject gameObject) => _gameObjects.Remove(gameObject);
+
     protected abstract void SetInputManager();
+
     public event EventHandler<BaseGameState> OnStateSwitched;
+
     public event EventHandler<BaseGameStateEvent> OnEventNotification;
-
-
 }

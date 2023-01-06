@@ -20,6 +20,7 @@ public class SoundManager
     }
 
     public void RegisterSound(BaseGameStateEvent gameStateEvent, SoundEffect soundEffect) => _soundBank.Add(gameStateEvent.GetType(), soundEffect);
+
     public void OnNotify(BaseGameStateEvent gameStateEvent)
     {
         if (_soundBank.ContainsKey(gameStateEvent.GetType()))
@@ -27,9 +28,6 @@ public class SoundManager
             _soundBank[gameStateEvent.GetType()].Play();
         }
     }
-
-    
-
 
     public void PlaySoundtrack()
     {
