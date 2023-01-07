@@ -16,8 +16,8 @@ public abstract class BaseGameObject
     protected Vector2 _position;
     protected List<BoundingBox> _boundingBoxes = new();
 
-    public int Width { get => _texture2D.Width; }
-    public int Height { get => _texture2D.Height; }
+    public virtual int Width { get => _texture2D.Width; }
+    public virtual int Height { get => _texture2D.Height; }
 
     public virtual Vector2 Position
     {

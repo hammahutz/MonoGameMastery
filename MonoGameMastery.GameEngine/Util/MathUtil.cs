@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 
@@ -61,6 +62,26 @@ namespace MonoGameMastery.GameEngine.Util
                 vec.Normalize();
                 return vec;
             }
+        }
+        public static Rectangle[,] SpriteSheet(Rectangle spriteSheetDimensions, Point frameSize)
+        {
+            Rectangle[,] spriteSheet = new Rectangle[spriteSheetDimensions.Width, spriteSheetDimensions.Height];
+
+            for (int y = 0; y < spriteSheetDimensions.Height; y++)
+            {
+                for (int x = 0; x < spriteSheetDimensions.Width; x++)
+                {
+                    spriteSheet[x,y] = new Rectangle
+                    (
+                        spriteSheetDimensions.X + frameSize.X * x,
+                        spriteSheetDimensions.Y + frameSize.Y * y,
+                        frameSize.X,
+                        frameSize.Y
+                    );
+
+                }
+            }
+            return spriteSheet;
         }
     }
 }

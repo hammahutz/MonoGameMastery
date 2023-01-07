@@ -2,7 +2,7 @@ namespace MonoGameMastery.VerticalShooter.Util;
 
 public static class Assets
 {
-    public const string GFX_PLAYER = "gfx/fighter";
+    public const string GFX_PLAYER = "gfx/animations/FighterSpriteSheet";
     public const string GFX_BACKGROUND = "gfx/Barren";
     public const string GFX_BULLET = "gfx/bullet";
     public const string GFX_EXHAUST = "gfx/Cloud001";

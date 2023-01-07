@@ -133,15 +133,21 @@ namespace MonoGameMastery.VerticalShooter.States
                 if (cmd is GamePlayInputCommand.GameExit)
                     NotifyEvent(new BaseGameStateEvent.GameQuit());
                 if (cmd is GamePlayInputCommand.PlayerMoveLeft)
+                {
                     _playerSprite.MoveLeft();
-                KeepPlayerInBounds();
+                    KeepPlayerInBounds();
+                }
                 if (cmd is GamePlayInputCommand.PlayerMoveRight)
+                {
                     _playerSprite.MoveRight();
-                KeepPlayerInBounds();
+                    KeepPlayerInBounds();
+                }
                 if (cmd is GamePlayInputCommand.PlayerShoots)
                     Shoot(gameTime);
                 if (cmd is GamePlayInputCommand.PlayerShootsMissile)
                     ShootMissile(gameTime);
+                if (cmd is GamePlayInputCommand.PlayerStopsMoving)
+                    _playerSprite.StopMoving();
             });
         }
 
@@ -158,6 +164,8 @@ namespace MonoGameMastery.VerticalShooter.States
             _explosionList = CleanObjects(_explosionList);
 
             DetectCollision();
+
+            _playerSprite.Update(gameTime);
         }
 
         private void DetectCollision()
