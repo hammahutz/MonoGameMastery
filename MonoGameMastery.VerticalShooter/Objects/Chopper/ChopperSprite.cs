@@ -29,7 +29,7 @@ public class ChopperSprite : BaseGameObject
         var chopperSprite = new Rectangle(0, 0, 44, 98);
         var bladeSprite = new Rectangle(133, 98, 94, 94);
 
-        _bodyParts = new List<BaseChopperPart>() fdsa
+        _bodyParts = new List<BaseChopperPart>()
         {
             new ChopperBody(chopperSprite, new Vector2(chopperSprite.Width / 2f, 34)),
             new ChopperBlades(bladeSprite, bladeSprite.Origin()),
