@@ -24,7 +24,7 @@ public abstract class BaseGameState
 
     protected InputManager InputManager { get; set; }
 
-    private readonly List<BaseGameObject> _gameObjects = new List<BaseGameObject>();
+    private readonly List<BaseObject> _gameObjects = new List<BaseObject>();
 
     public void Initialize(ContentManager contentManager, int viewportWidth, int viewportHeight)
     {
@@ -81,9 +81,9 @@ public abstract class BaseGameState
         _soundManager.OnNotify(eventType);
     }
 
-    protected void AddGameObject(BaseGameObject gameObject) => _gameObjects.Add(gameObject);
+    protected void AddObject(BaseObject gameObject) => _gameObjects.Add(gameObject);
 
-    protected void RemoveGameObject(BaseGameObject gameObject) => _gameObjects.Remove(gameObject);
+    protected void RemoveGameObject(BaseObject gameObject) => _gameObjects.Remove(gameObject);
 
     protected abstract void SetInputManager();
 

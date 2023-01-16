@@ -44,9 +44,9 @@ public class DevState : BaseGameState
             (300, new Vector2(-50, -50)),
         });
 
-        AddGameObject(_exhaustEmitter);
-        AddGameObject(_player);
-        AddGameObject(_chopperSprite);
+        AddObject(_exhaustEmitter);
+        AddObject(_player);
+        AddObject(_chopperSprite);
 
         _debugFont = LoadAsset<SpriteFont>(Assets.FONT_DEBUG);
         _debugTexture = LoadAsset<Texture2D>(Assets.GFX_DEBUG);
@@ -68,10 +68,10 @@ public class DevState : BaseGameState
                 {
                     Position = new Vector2(_player.Position.X, _player.Position.Y - 25)
                 };
-                AddGameObject(_missile);
+                AddObject(_missile);
 
                 _explosionEmitter = new ExplosionEmitter(LoadTexture(Assets.GFX_EXPLOSION), new Vector2(100, 100));
-                AddGameObject(_explosionEmitter);
+                AddObject(_explosionEmitter);
             }
         });
     }

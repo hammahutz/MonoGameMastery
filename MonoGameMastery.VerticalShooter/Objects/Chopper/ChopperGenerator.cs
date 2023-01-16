@@ -5,6 +5,7 @@ using System.Timers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using static MonoGameMastery.GameEngine.Util.Global;
 using static MonoGameMastery.GameEngine.Util.MathUtil;
 
 namespace MonoGameMastery.VerticalShooter.Objects.Chopper;

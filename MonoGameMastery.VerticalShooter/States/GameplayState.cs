@@ -12,6 +12,7 @@ using MonoGameMastery.GameEngine.Objects;
 using MonoGameMastery.GameEngine.States;
 using MonoGameMastery.VerticalShooter.Objects;
 using MonoGameMastery.VerticalShooter.Objects.Chopper;
+using MonoGameMastery.VerticalShooter.Objects.Text;
 using MonoGameMastery.VerticalShooter.Particles;
 using MonoGameMastery.VerticalShooter.Util;
 
@@ -25,7 +26,9 @@ namespace MonoGameMastery.VerticalShooter.States
         public const double MISSILE_FIRE_RATE = 1.0;
         private const int MAX_EXPLOSION_AGE = 600;
         private const int EXPLOSION_ACTIVE_LENGTH = 75;
+        private const int STARTING_PLAYER_LIVES = 3;
 
+        private int _playerLives = STARTING_PLAYER_LIVES;
         private bool _isShooting;
         private bool _isShootingMissile;
         private TimeSpan _lastShotAt;
@@ -39,12 +42,16 @@ namespace MonoGameMastery.VerticalShooter.States
         private Texture2D _exhaustTexture;
         private Texture2D _chopperTexture;
         private Texture2D _explosionTexture;
+        private LivesText _livesText;
 
         private List<BulletSprite> _bulletList;
         private List<MissileSprite> _missileList;
         private List<ExplosionEmitter> _explosionList;
         private List<ChopperSprite> _enemyList;
+
         private bool _playerDead;
+        private bool _gameOver = false;
+        private Texture2D _screenBoxTexture;
 
         public override void LoadContent()
         {
@@ -56,6 +63,13 @@ namespace MonoGameMastery.VerticalShooter.States
             _explosionTexture = LoadTexture(Assets.GFX_EXPLOSION);
             _chopperTexture = LoadTexture(Assets.GFX_CHOPPER);
 
+            _livesText = new LivesText(LoadAsset<SpriteFont>(Assets.FONT_LIVES))
+            {
+                Lives = _playerLives,
+                Position = new Vector2(10.0f, 10.0f)
+            };
+            AddObject(_livesText);
+
             _bulletList = new List<BulletSprite>();
             _missileList = new List<MissileSprite>();
             _explosionList = new List<ExplosionEmitter>();
@@ -64,8 +78,8 @@ namespace MonoGameMastery.VerticalShooter.States
             _playerSprite.Position = new Vector2(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT - _playerSprite.Height - 10);
             _chopperGenerator = new ChopperGenerator(_chopperTexture, 4, AddChopper);
 
-            AddGameObject(_terrainBackground);
-            AddGameObject(_playerSprite);
+            AddObject(_terrainBackground);
+            AddObject(_playerSprite);
             _chopperGenerator.GenerateChoppers();
 
             _soundManager.SetSoundTrack(new List<SoundEffectInstance>()
@@ -84,7 +98,7 @@ namespace MonoGameMastery.VerticalShooter.States
         {
             chopper.OnObjectChanged += _chopperSprite_OnObjectChanged;
             _enemyList.Add(chopper);
-            AddGameObject(chopper);
+            AddObject(chopper);
         }
 
         private void _chopperSprite_OnObjectChanged(object sender, BaseGameStateEvent e)
@@ -107,7 +121,7 @@ namespace MonoGameMastery.VerticalShooter.States
         {
             var explosion = new ExplosionEmitter(_explosionTexture, position);
             _explosionList.Add(explosion);
-            AddGameObject(explosion);
+            AddObject(explosion);
         }
 
         private void UpdateExplosion(GameTime gameTime)
@@ -149,6 +163,27 @@ namespace MonoGameMastery.VerticalShooter.States
                 if (cmd is GamePlayInputCommand.PlayerStopsMoving)
                     _playerSprite.StopMoving();
             });
+        }
+
+        public override void DrawGameState(SpriteBatch spriteBatch)
+        {
+            if (_gameOver)
+            {
+                Texture2D screenBoxTexture = GetScreenBoxTexture(spriteBatch.GraphicsDevice);
+                Rectangle viewportRectangle = new(0,0,VIEWPORT_WIDTH,VIEWPORT_HEIGHT);
+                spriteBatch.Draw(screenBoxTexture, viewportRectangle, Color.Black * 0.3f);
+
+            }
+        }
+
+        private Texture2D GetScreenBoxTexture(GraphicsDevice graphicsDevice)
+        {
+            if (_screenBoxTexture == null)
+            {
+                _screenBoxTexture = new Texture2D(graphicsDevice, 1, 1);
+                _screenBoxTexture.SetData<Color>(new Color[] { Color.White });
+            }
+            return _screenBoxTexture;
         }
 
         public override void UpdateGameState(GameTime gameTime)
@@ -195,12 +230,29 @@ namespace MonoGameMastery.VerticalShooter.States
         private async void KillPlayer()
         {
             Console.WriteLine("Kill Player");
-            _playerDead = true;
-            AddExplosion(_playerSprite.Position);
-            RemoveGameObject(_playerSprite);
+            _playerLives -= 1;
+            if (_playerLives > 0)
+            {
+                _playerDead = true;
+                AddExplosion(_playerSprite.Position);
+                RemoveGameObject(_playerSprite);
 
-            await Task.Delay(TimeSpan.FromSeconds(2));
-            ResetGame();
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                ResetGame();
+            }
+            else
+            {
+                GameOver();
+            }
+        }
+
+        private void GameOver()
+        {
+            AddObject(new GameOverText(LoadAsset<SpriteFont>(Assets.FONT_GAME_OVER))
+            {
+                Position = new Vector2(460, 300)
+            });
+            _gameOver = true;
         }
 
         private void ResetGame()
@@ -265,7 +317,7 @@ namespace MonoGameMastery.VerticalShooter.States
             };
 
             _missileList.Add(missileSprite);
-            AddGameObject(missileSprite);
+            AddObject(missileSprite);
         }
 
         private void CreateBullets()
@@ -283,8 +335,8 @@ namespace MonoGameMastery.VerticalShooter.States
             _bulletList.Add(bulletSpriteLeft);
             _bulletList.Add(bulletSpriteRight);
 
-            AddGameObject(bulletSpriteLeft);
-            AddGameObject(bulletSpriteRight);
+            AddObject(bulletSpriteLeft);
+            AddObject(bulletSpriteRight);
         }
 
         protected override void SetInputManager() => InputManager = new InputManager(new GameplayInputMapper());

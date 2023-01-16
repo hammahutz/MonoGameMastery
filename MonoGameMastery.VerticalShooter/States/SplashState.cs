@@ -9,7 +9,7 @@ namespace MonoGameMastery.VerticalShooter.States;
 
 public class SplashState : BaseGameState
 {
-    public override void LoadContent() => AddGameObject(new SplashImage(LoadTexture("gfx/splash")));
+    public override void LoadContent() => AddObject(new SplashImage(LoadTexture("gfx/splash")));
 
     public override void HandleInput(GameTime gameTime)
     {

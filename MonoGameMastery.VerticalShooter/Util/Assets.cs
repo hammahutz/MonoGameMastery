@@ -12,6 +12,8 @@ public static class Assets
     public const string GFX_DEBUG = "gfx/Empty";
 
     public const string FONT_DEBUG = "font/font";
+    public const string FONT_LIVES = "font/Lives";
+    public const string FONT_GAME_OVER = "font/GameOver";
 
     public const string MUSIC_FUTURE_AMBIENT1 = "music/FutureAmbient_1";
     public const string MUSIC_FUTURE_AMBIENT2 = "music/FutureAmbient_2";
