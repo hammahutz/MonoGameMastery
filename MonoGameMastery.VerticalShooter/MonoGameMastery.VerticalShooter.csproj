@@ -10,4 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MonoGameMastery.GameEngine\MonoGameMastery.GameEngine.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource  Include="Levels/LevelData/Level1.txt"/>
+  </ItemGroup>
 </Project>
