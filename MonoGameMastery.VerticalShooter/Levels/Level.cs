@@ -40,7 +40,7 @@ public class Level
 
     public void Reset() => _currentLevelRow = 0;
 
-    public void GenerateLevelEvents (GameTime gameTime)
+    public void GenerateLevelEvents(GameTime gameTime)
     {
         if (_startGameTime == null)
         {
@@ -50,6 +50,35 @@ public class Level
         {
             return;
         }
+
+        _startGameTime = gameTime.TotalGameTime;
+
+        foreach (var e in _currentLevel[_currentLevelRow])
+        {
+            switch (e)
+            {
+                case LevelEvents.GenerateEnemies g:
+                    OnGenereateEnemies?.Invoke(this, g);
+                    break;
+
+                case LevelEvents.GenderateTurret g:
+                    OnGenderateTurret?.Invoke(this, g);
+                    break;
+
+                case LevelEvents.StartLevel start:
+                    OnStartLevel?.Invoke(this, start);
+                    break;
+
+                case LevelEvents.EndLevel end:
+                    OnEndLevel?.Invoke(this, end);
+                    break;
+
+                case LevelEvents.NoRow n:
+                    OnNoRow?.Invoke(this, n);
+                    break;
+            }
+        }
+        _currentLevelRow++;
     }
 
 }

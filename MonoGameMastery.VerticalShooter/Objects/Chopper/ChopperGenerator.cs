@@ -25,23 +25,24 @@ public class ChopperGenerator
 
     private readonly Timer _timer;
 
-    public ChopperGenerator(Texture2D texture2D, int nbChoppers, Action<ChopperSprite> handler)
+    public ChopperGenerator(Texture2D texture2D, Action<ChopperSprite> handler)
     {
         _texture2D = texture2D;
-        _nbChoppers = nbChoppers;
+        _nbChoppers = 0;
         _chopperHandler = handler;
 
-        _maxNbChoppers = nbChoppers;
+        _maxNbChoppers = 0;
         _timer = new Timer(500);
         _timer.Elapsed += _timer_Elapsed;
     }
 
-    public void GenerateChoppers()
+    public void GenerateChoppers(int nbChoppers)
     {
         if (_generating)
         {
             return;
         }
+        _maxNbChoppers = nbChoppers;
         _choppersGenerated = 0;
         _timer.Start();
     }

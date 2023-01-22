@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGameMastery.GameEngine.Input;
 using MonoGameMastery.GameEngine.Objects;
 using MonoGameMastery.GameEngine.States;
+using MonoGameMastery.VerticalShooter.Levels;
 using MonoGameMastery.VerticalShooter.Objects;
 using MonoGameMastery.VerticalShooter.Objects.Chopper;
 using MonoGameMastery.VerticalShooter.Objects.Text;
@@ -27,7 +28,8 @@ namespace MonoGameMastery.VerticalShooter.States
         private const int MAX_EXPLOSION_AGE = 600;
         private const int EXPLOSION_ACTIVE_LENGTH = 75;
         private const int STARTING_PLAYER_LIVES = 3;
-
+        private readonly EventHandler<LevelEvents.GenderateTurret> _level_OnGenerateTurret;
+        private Level _level;
         private int _playerLives = STARTING_PLAYER_LIVES;
         private bool _isShooting;
         private bool _isShootingMissile;
@@ -76,11 +78,10 @@ namespace MonoGameMastery.VerticalShooter.States
             _enemyList = new List<ChopperSprite>();
 
             _playerSprite.Position = new Vector2(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT - _playerSprite.Height - 10);
-            _chopperGenerator = new ChopperGenerator(_chopperTexture, 4, AddChopper);
+            _chopperGenerator = new ChopperGenerator(_chopperTexture, AddChopper);
 
             AddObject(_terrainBackground);
             AddObject(_playerSprite);
-            _chopperGenerator.GenerateChoppers();
 
             _soundManager.SetSoundTrack(new List<SoundEffectInstance>()
             {
@@ -92,6 +93,34 @@ namespace MonoGameMastery.VerticalShooter.States
 
             _soundManager.RegisterSound(new GamePlayEvents.PlayerShoot(), LoadSounds(Assets.SFX_BULLET));
             _soundManager.RegisterSound(new GamePlayEvents.PlayerShootMissile(), LoadSounds(Assets.SFX_MISSILE)); //TODO WHAT WHY DON't //TODO WHAT WHY DON'T I HAVE IMPLEMENT THIS IN PAGE 186!?!?!?!?!?!?!?
+
+            _level = new Level(new LevelReader(VIEWPORT_WIDTH));
+            _level.OnGenereateEnemies += _level_OnGenerateEnemies;
+            _level.OnGenderateTurret += _level_OnGenerateTurret;
+            _level.OnStartLevel += _level_OnStartLevel;
+            _level.OnEndLevel += _level_OnEndLevel;
+            _level.OnNoRow += _level_OnNoRow;
+        }
+
+        private void _level_OnGenerateEnemies(object sender, LevelEvents.GenerateEnemies e)
+        {
+            System.Console.WriteLine("Get to da Choppa!!!1!!one!!!");
+            _chopperGenerator.GenerateChoppers(e.NbEnemies);
+        }
+
+        private void _level_OnStartLevel(object sender, LevelEvents.StartLevel e)
+        {
+            System.Console.WriteLine("Start level");
+        }
+
+        private void _level_OnEndLevel(object sender, LevelEvents.EndLevel e)
+        {
+            System.Console.WriteLine("End level");
+        }
+
+        private void _level_OnNoRow(object sender, LevelEvents.NoRow e)
+        {
+            System.Console.WriteLine("No Row");
         }
 
         private void AddChopper(ChopperSprite chopper)
@@ -170,7 +199,7 @@ namespace MonoGameMastery.VerticalShooter.States
             if (_gameOver)
             {
                 Texture2D screenBoxTexture = GetScreenBoxTexture(spriteBatch.GraphicsDevice);
-                Rectangle viewportRectangle = new(0,0,VIEWPORT_WIDTH,VIEWPORT_HEIGHT);
+                Rectangle viewportRectangle = new(0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
                 spriteBatch.Draw(screenBoxTexture, viewportRectangle, Color.Black * 0.3f);
 
             }
@@ -201,6 +230,7 @@ namespace MonoGameMastery.VerticalShooter.States
             DetectCollision();
 
             _playerSprite.Update(gameTime);
+            _level.GenerateLevelEvents(gameTime);
         }
 
         private void DetectCollision()
@@ -258,6 +288,7 @@ namespace MonoGameMastery.VerticalShooter.States
         private void ResetGame()
         {
             Console.WriteLine("Reset Game");
+            _level.Reset();
         }
 
         protected List<T> CleanObjects<T>(List<T> objectList) where T : BaseGameObject
