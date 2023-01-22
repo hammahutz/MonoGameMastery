@@ -7,11 +7,7 @@ public class LevelEvents : BaseGameStateEvent
     public class GenerateEnemies : LevelEvents
     {
         public int NbEnemies { get; private set; }
-        public GenerateEnemies(int nbEnemies)
-        {
-            NbEnemies = nbEnemies;
-        }
-
+        public GenerateEnemies(int nbEnemies) => NbEnemies = nbEnemies;
     }
 
     public class GenderateTurret : LevelEvents
@@ -22,6 +18,6 @@ public class LevelEvents : BaseGameStateEvent
 
     public class StartLevel : LevelEvents { }
     public class EndLevel : LevelEvents { }
-    public class NoRow { : LevelEvents { }
+    public class NoRow : LevelEvents { }
 
 }
