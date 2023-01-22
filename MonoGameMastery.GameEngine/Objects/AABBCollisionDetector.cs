@@ -6,9 +6,9 @@ namespace MonoGameMastery.GameEngine.Objects;
 
 public class AABBCollisionDetector<P, A> where P : BaseGameObject where A : BaseGameObject
 {
-    private List<P> _passiveObjects = new List<P>();
+    private readonly List<P> _passiveObjects = new List<P>();
 
-    private List<string> _namn = new List<string>() { "adam", "sunanda" };
+    private readonly List<string> _namn = new List<string>() { "adam", "sunanda" };
 
     public AABBCollisionDetector(List<P> passiveObjects)
     {

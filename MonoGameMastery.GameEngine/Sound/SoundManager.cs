@@ -11,7 +11,7 @@ public class SoundManager
 {
     private int _soundtrackIndex = -1;
     private List<SoundEffectInstance> _soundtracks = new List<SoundEffectInstance>();
-    private Dictionary<Type, SoundEffect> _soundBank = new Dictionary<Type, SoundEffect>();
+    private readonly Dictionary<Type, SoundEffect> _soundBank = new Dictionary<Type, SoundEffect>();
 
     public void SetSoundTrack(List<SoundEffectInstance> soundtracks)
     {

@@ -4,7 +4,7 @@ namespace MonoGameMastery.GameEngine.Util
 {
     public static class RandomNumberGenerator
     {
-        private static Random _rnd = new Random();
+        private static readonly Random _rnd = new Random();
 
         public static void NextRandom() => _rnd.Next();
 

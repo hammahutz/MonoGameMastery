@@ -12,9 +12,9 @@ namespace MonoGameMastery.GameEngine.Objects
     public class PlayerSprite : BaseGameObject
     {
         private const float PLAYER_SPEED = 10.0f;
-        private List<Rectangle> BB;
+        private readonly List<Rectangle> BB;
 
-        private Dictionary<AnimationState, Animation> _animations;
+        private readonly Dictionary<AnimationState, Animation> _animations;
         private Animation _currentAnimation;
         private Rectangle _idleRectangle;
         private bool _movingLeft = false;

@@ -17,7 +17,7 @@ namespace MonoGameMastery.GameEngine.Input
                 commands.Add(new GamePlayInputCommand.PlayerMoveLeft());
             else if (state.IsKeyDown(Keys.Right))
                 commands.Add(new GamePlayInputCommand.PlayerMoveRight());
-            else 
+            else
                 commands.Add(new GamePlayInputCommand.PlayerStopsMoving());
 
             if (state.IsKeyDown(Keys.Space))

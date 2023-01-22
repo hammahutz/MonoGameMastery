@@ -7,7 +7,7 @@ namespace MonoGameMastery.GameEngine;
 
 public class MainGame : Game
 {
-    private GraphicsDeviceManager _graphics;
+    private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
     public static SpriteFont Font;
@@ -18,12 +18,12 @@ public class MainGame : Game
 
     private Rectangle _renderScaleRectangle;
 
-    private int _designedResolutionWidth;
-    private int _designedResolutionHeight;
-    private float _designedResolutionAspectRatio;
+    private readonly int _designedResolutionWidth;
+    private readonly int _designedResolutionHeight;
+    private readonly float _designedResolutionAspectRatio;
     // private float _designedResolutionAspectRation = _designedResolutionWidth / (float)_designedResolutionHeight;
 
-    private BaseGameState _firstGameState;
+    private readonly BaseGameState _firstGameState;
 
     public MainGame(int width, int height, BaseGameState firstGameState)
     {

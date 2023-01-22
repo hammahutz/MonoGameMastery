@@ -10,8 +10,8 @@ namespace MonoGameMastery.VerticalShooter.Levels;
 
 public class LevelReader
 {
-    private int _viewportWidth;
-    private int _viewportHeight;
+    private readonly int _viewportWidth;
+    private readonly int _viewportHeight;
 
     private const int NB_ROWS = 11;
     private const int NB_TILES_ROWS = 10;

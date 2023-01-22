@@ -7,7 +7,7 @@ namespace MonoGameMastery.GameEngine.Input;
 
 public class InputManager
 {
-    private BaseInputMapper _inputMapper;
+    private readonly BaseInputMapper _inputMapper;
 
     public InputManager(BaseInputMapper inputMapper) => _inputMapper = inputMapper;
 

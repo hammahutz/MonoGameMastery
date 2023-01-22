@@ -7,10 +7,10 @@ namespace MonoGameMastery.GameEngine.Objects.Animations;
 
 public class Animation
 {
-    private List<AnimationFrame> _frames = new List<AnimationFrame>();
+    private readonly List<AnimationFrame> _frames = new List<AnimationFrame>();
     private int _animationAge = 0;
     private int _lifespan = -1;
-    private bool _isLoop = false;
+    private readonly bool _isLoop = false;
 
     public int Lifespan
     {
@@ -94,6 +94,6 @@ public class Animation
 
     public void Reset() => _animationAge = 0;
 
-    
+
 
 }

@@ -16,6 +16,6 @@ public class AnimationFrame
     }
 
     public Rectangle SourceRectangle { get; private set; }
-   public int Lifespan { get; private set; }
+    public int Lifespan { get; private set; }
 
 }

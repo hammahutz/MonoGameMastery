@@ -9,7 +9,7 @@ namespace MonoGameMastery.VerticalShooter.Levels;
 
 public class Level
 {
-    private LevelReader _levelReader;
+    private readonly LevelReader _levelReader;
     private List<List<BaseGameStateEvent>> _currentLevel;
     private int _currentLevelNumber;
     private int _currentLevelRow;
