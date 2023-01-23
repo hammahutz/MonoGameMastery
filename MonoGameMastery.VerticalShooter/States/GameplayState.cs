@@ -185,6 +185,14 @@ namespace MonoGameMastery.VerticalShooter.States
                     _playerSprite.MoveRight();
                     KeepPlayerInBounds();
                 }
+                if (cmd is GamePlayInputCommand.PlayerMoveUp)
+                {
+                    _playerSprite.MoveUp();
+                }
+                if (cmd is GamePlayInputCommand.PlayerMoveDown)
+                {
+                    _playerSprite.MoveDown();
+                }
                 if (cmd is GamePlayInputCommand.PlayerShoots)
                     Shoot(gameTime);
                 if (cmd is GamePlayInputCommand.PlayerShootsMissile)

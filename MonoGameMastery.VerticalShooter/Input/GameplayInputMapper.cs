@@ -20,6 +20,11 @@ namespace MonoGameMastery.GameEngine.Input
             else
                 commands.Add(new GamePlayInputCommand.PlayerStopsMoving());
 
+            if (state.IsKeyDown(Keys.Up))
+                commands.Add(new GamePlayInputCommand.PlayerMoveUp());
+            if (state.IsKeyDown(Keys.Down))
+                commands.Add(new GamePlayInputCommand.PlayerMoveDown());
+
             if (state.IsKeyDown(Keys.Space))
                 commands.Add(new GamePlayInputCommand.PlayerShoots());
             if (state.IsKeyDown(Keys.LeftControl))

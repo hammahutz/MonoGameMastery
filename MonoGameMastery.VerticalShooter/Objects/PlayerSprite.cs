@@ -124,6 +124,9 @@ namespace MonoGameMastery.GameEngine.Objects
             Position = new Vector2(Position.X + PLAYER_SPEED, Position.Y);
         }
 
+        public void MoveUp() => Position = new Vector2(Position.X, Position.Y - PLAYER_SPEED);
+        public void MoveDown() => Position = new Vector2(Position.X, Position.Y + PLAYER_SPEED);
+
         public override void Update(GameTime gameTime)
         {
             if (_currentAnimation != null)
